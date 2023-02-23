@@ -33,3 +33,14 @@ export type RootTabScreenProps<Screen extends keyof RootTabParamList> = Composit
   BottomTabScreenProps<RootTabParamList, Screen>,
   NativeStackScreenProps<RootStackParamList>
 >;
+
+export type Reserva = {
+  id: string;
+  nombre: string;
+  telefono: string;
+  personas: number;
+  dia: string;
+  hora: string;
+  email?: string;
+  masinfo?: string;
+}
