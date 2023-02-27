@@ -4,10 +4,10 @@
  *
  */
 import { FontAwesome } from '@expo/vector-icons';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { ColorSchemeName, Pressable, View, Text } from 'react-native';
+import { ColorSchemeName, Pressable, View, Text, StyleSheet } from 'react-native';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -17,7 +17,10 @@ import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
-import { AntDesign } from '@expo/vector-icons'; 
+import { AntDesign } from '@expo/vector-icons';
+import AddReserva from '../screens/AddReserva';
+import FloatingActionButton from '../components/FloatingActionButton';
+import { useState } from 'react';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -42,6 +45,7 @@ function RootNavigator() {
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
+        <Stack.Screen name="AddReserva" component={AddReserva} options={{ title: 'Welcome' }} />
       </Stack.Group>
     </Stack.Navigator>
   );
@@ -55,7 +59,16 @@ const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
   const colorScheme = useColorScheme();
+  const [pressed, setPressed] = useState(false);
 
+  const handlePressIn = () => {
+    console.log("press");
+    setPressed(true);
+  };
+
+  const handlePressOut = () => {
+    setPressed(false);
+  };
   return (
     <BottomTab.Navigator
       initialRouteName="TabOne"
@@ -64,10 +77,11 @@ function BottomTabNavigator() {
         tabBarLabelStyle: {
           marginBottom: 6,
         },
-      }}>
+      }}
+    >
+
       <BottomTab.Screen
         name="TabOne"
-        
         component={TabOneScreen}
         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
           title: 'Inicio',
@@ -88,14 +102,34 @@ function BottomTabNavigator() {
           ),
           headerLeft: () => (
             <View>
-              <Text style={{marginLeft: 10}}>A</Text>
+              <Text style={{ marginLeft: 10 }}>A</Text>
             </View>
-        ),
+          ),
         })}
       />
       <BottomTab.Screen
+        name="AddReserva"
+        component={AddReserva}
+        options={({ navigation }: RootTabScreenProps<'AddReserva'>) => ({
+          title: "NUEVA RESERVA",
+          tabBarIcon: ({ color }) => <AntDesign name="home" size={24} color={color} />,
+          tabBarButton: (props) => (
+            <Pressable className="flex items-center justify-center" style={[styles.button, {
+              backgroundColor: Colors[colorScheme].backgroundCalendar,
+            }, pressed && styles.buttonPress]}
+              onPress={() => navigation.navigate('AddReserva')}
+              onPressIn={handlePressIn}
+              onPressOut={handlePressOut}>
+              <AntDesign name="adduser" size={32} color="white" />
+            </Pressable>
+          )
+        })
+
+        }
+      />
+      <BottomTab.Screen
         name="TabTwo"
-      
+
         component={TabTwoScreen}
         options={{
           title: 'Configuración',
@@ -116,3 +150,30 @@ function TabBarIcon(props: {
 }) {
   return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
 }
+
+const styles = StyleSheet.create({
+  button: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    position: 'absolute',
+    bottom: 60,
+    right: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+
+    elevation: 10,
+  },
+
+  buttonPress: {
+    opacity: 0.5,
+  },
+});

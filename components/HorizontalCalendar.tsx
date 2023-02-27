@@ -23,7 +23,7 @@ interface Props {
 
 function dateSubtractDays(date: Date, days: number) {
     var result = new Date(date);
-    result.setDate(result.getDate() - days);
+    result.setDate(result.getDate() + days);
     return result;
 }
 
@@ -32,11 +32,25 @@ function getDayString(date: Date): string {
 }
 
 function isSameDay(date1: Date, date2: Date): boolean {
-    return date1.getDate() === date2.getDate();
+    if (date1.getFullYear() == date2.getFullYear() &&
+        date1.getMonth() == date2.getMonth() &&
+        date1.getDate() == date2.getDate()) {
+        return true;
+
+    }
+    return false;
 }
 
 function isToday(date: Date): boolean {
-    return new Date().getDate() == date.getDate();
+    const newDate = new Date()
+    if (newDate.getFullYear() == date.getFullYear() &&
+        newDate.getMonth() == date.getMonth() &&
+        newDate.getDate() == date.getDate()) {
+        console.log(newDate.getFullYear())
+        return new Date().getDate() == date.getDate();
+    }
+
+    return false;
 }
 
 function generateHorizontalCalendarDates(days: number): Date[] {
@@ -46,7 +60,7 @@ function generateHorizontalCalendarDates(days: number): Date[] {
         result[i] = dateSubtractDays(today, i);
     }
 
-    return result.reverse();
+    return result;
 }
 
 export default function HorizontalCalendar({
@@ -55,9 +69,9 @@ export default function HorizontalCalendar({
 }: Props) {
     const colorScheme = useColorScheme();
 
-    
+
     const dates: Date[] = useMemo(() => {
-        return generateHorizontalCalendarDates(45);
+        return generateHorizontalCalendarDates(10);
     }, []);
 
     const onDatePress = (date: Date) => {
@@ -84,10 +98,12 @@ export default function HorizontalCalendar({
     }
 
     const renderItem = ({ item, index }: { item: Date; index: number }) => {
+        const monthName = item.getMonth();
         const dayNumber = item.getDate();
         const dayString = translateDate(getDayString(item));
 
         const isActive = isSameDay(selectedDate, item);
+
         return (
             <Pressable
                 onPress={() => onDatePress(item)}
@@ -104,7 +120,6 @@ export default function HorizontalCalendar({
 
     return (
         <View>
-            <Text>{}</Text>
             <FlatList
                 style={{ backgroundColor: Colors[colorScheme].backgroundCalendar }}
                 data={dates}
@@ -112,10 +127,12 @@ export default function HorizontalCalendar({
                 keyExtractor={(item) => item.toDateString()}
                 horizontal={true}
                 contentContainerStyle={[
-                    { },
+                    {
+                        marginHorizontal: 10,
+                        marginVertical: 5,
+                    },
                 ]}
                 showsHorizontalScrollIndicator={false}
-                initialScrollIndex={dates.length - 8}
                 getItemLayout={(_, index) => ({
                     length: ITEM_WIDTH,
                     offset: ITEM_OFFSET * index,

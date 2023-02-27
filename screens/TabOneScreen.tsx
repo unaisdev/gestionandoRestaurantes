@@ -7,6 +7,7 @@ import { Reserva, RootTabScreenProps } from '../types';
 import axios from "axios"
 import ReservaCard from '../components/ReservaCard';
 import HorizontalCalendar from '../components/HorizontalCalendar';
+import FloatingActionButton from '../components/FloatingActionButton';
 
 function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -33,7 +34,7 @@ function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
 
 
   return (
-    <View style={styles.container} className='flex flex-row h-screen items-center'>
+    <View style={styles.container} className='flex flex-1 flex-row h-screen items-center'>
       <HorizontalCalendar
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
