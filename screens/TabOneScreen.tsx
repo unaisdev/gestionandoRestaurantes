@@ -5,27 +5,16 @@ import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import { Reserva, RootTabScreenProps } from '../types';
 import axios from "axios"
-
-
-const ReservaCard = ({ reserva }) => (
-  <View style={styles.card}>
-    <View style={styles.row}>
-      <Text>{reserva.nombre}</Text>
-      <Text>{reserva.personas}</Text>
-    </View>
-    <View style={styles.row}>
-      <Text>{reserva.dia}</Text>
-      <Text>{reserva.hora}</Text>
-    </View>
-  </View>
-);
+import ReservaCard from '../components/ReservaCard';
+import HorizontalCalendar from '../components/HorizontalCalendar';
 
 function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [data, setData] = useState<Reserva[]>([]);
 
   const getReservas = async () => {
     try {
-      const response = await axios.get('http://192.168.1.133:3000/api/reservar');
+      const response = await axios.get('https://centrocivico-nextjs-ts.vercel.app/api/reservar', { params: { key: "holaquetalestamos" } });
 
       const array = await response.data;
       setData(array);
@@ -42,17 +31,18 @@ function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
     getReservas();
   }, []);
 
-  
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="/screens/ .tsx" />
+    <View style={styles.container} className='flex flex-row h-screen items-center'>
+      <HorizontalCalendar
+        selectedDate={selectedDate}
+        setSelectedDate={setSelectedDate}
+      />
       <FlatList
-          data={data}
-          renderItem={({ item }) => <ReservaCard reserva={item} />}
-          keyExtractor={item => item.id}
-        />
+        data={data}
+        renderItem={({ item }) => <ReservaCard reserva={item} />}
+        keyExtractor={item => item.id}
+      />
     </View>
   );
 }
@@ -60,8 +50,6 @@ function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   title: {
     fontSize: 20,
