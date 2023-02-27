@@ -3,7 +3,7 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -73,9 +73,32 @@ function BottomTabNavigator() {
     <BottomTab.Navigator
       initialRouteName="TabOne"
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarShowLabel: true,
         tabBarLabelStyle: {
-          marginBottom: 6,
+          fontSize: 10,
+          marginBottom: 8,
+        },
+        tabBarIconStyle: {
+        },
+        tabBarStyle: {
+          position: "absolute",
+          bottom: 10,
+          left: 20,
+          right: 20,
+          borderWidth: 0.5,
+          borderColor: Colors[colorScheme].borderColor,
+          borderTopWidth: 0,
+          backgroundColor: "white",
+          borderRadius: 15,
+          height: 60,
+          shadowColor: Colors[colorScheme].borderColor,
+          shadowOffset: {
+            width: 0,
+            height: 0,
+          },
+          shadowOpacity: 0.7,
+          shadowRadius: 6.5,
+          elevation: 5,
         },
       }}
     >
@@ -92,9 +115,9 @@ function BottomTabNavigator() {
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}>
-              <FontAwesome
-                name="info-circle"
-                size={25}
+              <AntDesign
+                name="setting"
+                size={20}
                 color={Colors[colorScheme].text}
                 style={{ marginRight: 15 }}
               />
@@ -105,28 +128,30 @@ function BottomTabNavigator() {
               <Text style={{ marginLeft: 10 }}>A</Text>
             </View>
           ),
+
         })}
       />
-      <BottomTab.Screen
+      {/* <BottomTab.Screen
         name="AddReserva"
         component={AddReserva}
         options={({ navigation }: RootTabScreenProps<'AddReserva'>) => ({
-          title: "NUEVA RESERVA",
-          tabBarIcon: ({ color }) => <AntDesign name="home" size={24} color={color} />,
-          tabBarButton: (props) => (
-            <Pressable className="flex items-center justify-center" style={[styles.button, {
-              backgroundColor: Colors[colorScheme].backgroundCalendar,
-            }, pressed && styles.buttonPress]}
-              onPress={() => navigation.navigate('AddReserva')}
-              onPressIn={handlePressIn}
-              onPressOut={handlePressOut}>
-              <AntDesign name="adduser" size={32} color="white" />
-            </Pressable>
-          )
+          title: "",
+
+          tabBarIcon: ({ color }) => <Ionicons name="ios-person-add-outline" size={24} color={color} />,
+          tabBarButton: (props) => 
+          <Pressable className="flex items-center justify-center" style={[styles.button, {
+            backgroundColor: Colors[colorScheme].backgroundCalendar,
+          }, pressed && styles.buttonPress]}
+            onPress={() => navigation.navigate('AddReserva')}
+            onPressIn={handlePressIn}
+            onPressOut={handlePressOut}>
+            <AntDesign name="adduser" size={32} color="white" />
+          </Pressable>,
+
         })
 
         }
-      />
+      /> */}
       <BottomTab.Screen
         name="TabTwo"
 

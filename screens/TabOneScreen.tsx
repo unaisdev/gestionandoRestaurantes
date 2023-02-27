@@ -34,7 +34,7 @@ function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
 
 
   return (
-    <View style={styles.container} className='flex flex-1 flex-row h-screen items-center'>
+    <View className='flex-1 mb-10'>
       <HorizontalCalendar
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
@@ -44,39 +44,13 @@ function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
         renderItem={({ item }) => <ReservaCard reserva={item} />}
         keyExtractor={item => item.id}
       />
+      <FloatingActionButton />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-  card: {
-    flex: 1,
-    width: 100,
-    padding: 5,
-    margin: 5,
-    backgroundColor: "red",
-    borderColor: "black",
-    borderRadius: 20,
-    display: "flex",
-    flexDirection: "row",
-
-  },
-
-  row: {
-
-  }
+  
 });
 
 

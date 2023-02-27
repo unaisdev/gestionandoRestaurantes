@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import { RootStackScreenProps, RootTabScreenProps } from "../types";
 import { BottomTabBarButtonProps } from "@react-navigation/bottom-tabs";
 import { View } from "./Themed";
+import { useNavigation } from '@react-navigation/native';
 
 type Props = {
     
@@ -13,6 +14,8 @@ type Props = {
 
 const FloatingActionButton = () => {
     const useScheme = useColorScheme();
+    const navigation = useNavigation();
+
     const [pressed, setPressed] = useState(false);
 
     const handlePressIn = () => {
@@ -29,6 +32,7 @@ const FloatingActionButton = () => {
             <Pressable className="flex items-center justify-center" style={[styles.button, {
                 backgroundColor: Colors[useScheme].backgroundCalendar,
             }, pressed && styles.buttonPress]}
+                onPress={() => {navigation.navigate('AddReserva')} }            
                 onPressIn={handlePressIn}
                 onPressOut={handlePressOut}>
                 <AntDesign name="adduser" size={32} color="white" />
@@ -43,16 +47,16 @@ const styles = StyleSheet.create({
         height: 60,
         borderRadius: 30,
         position: 'absolute',
-        bottom: 60,
-        right: 10,
+        bottom: 45,
+        right: 30,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 5,
+            height: 2,
         },
         shadowOpacity: 0.34,
-        shadowRadius: 6.27,
-
+        shadowRadius: 3.27,
+        zIndex: 100,
         elevation: 10,
     },
 
