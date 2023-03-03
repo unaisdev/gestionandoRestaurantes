@@ -8,45 +8,16 @@ import axios from "axios"
 import ReservaCard from '../components/ReservaCard';
 import HorizontalCalendar from '../components/HorizontalCalendar';
 import FloatingActionButton from '../components/FloatingActionButton';
+import ReservasParaFecha from '../components/features/ReservasParaFecha';
 
 function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [data, setData] = useState<Reserva[]>([]);
-
-  const getReservas = async () => {
-    try {
-      const response = await axios.get('https://centrocivico-nextjs-ts.vercel.app/api/reservar', { params: { key: "holaquetalestamos" } });
-
-      const array = await response.data;
-      setData(array);
-      console.log(array);
-
-    } catch (error) {
-      console.error(error);
-    } finally {
-
-    }
-  };
-
-  useEffect(() => {
-    getReservas();
-  }, []);
-
-
+  
   return (
     <View className='flex-1 mb-10'>
-      <HorizontalCalendar
-        selectedDate={selectedDate}
-        setSelectedDate={setSelectedDate}
-      />
-      <FlatList
-        data={data}
-        renderItem={({ item }) => <ReservaCard reserva={item} />}
-        keyExtractor={item => item.id}
-      />
-      <FloatingActionButton />
+      <ReservasParaFecha />
     </View>
   );
+  
 }
 
 const styles = StyleSheet.create({

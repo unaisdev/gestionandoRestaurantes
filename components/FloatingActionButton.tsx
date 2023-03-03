@@ -8,10 +8,6 @@ import { BottomTabBarButtonProps } from "@react-navigation/bottom-tabs";
 import { View } from "./Themed";
 import { useNavigation } from '@react-navigation/native';
 
-type Props = {
-    
-}
-
 const FloatingActionButton = () => {
     const useScheme = useColorScheme();
     const navigation = useNavigation();
@@ -29,12 +25,17 @@ const FloatingActionButton = () => {
 
     return (
         <>
-            <Pressable className="flex items-center justify-center" style={[styles.button, {
-                backgroundColor: Colors[useScheme].backgroundCalendar,
-            }, pressed && styles.buttonPress]}
-                onPress={() => {navigation.navigate('AddReserva')} }            
+            <Pressable
+                className="flex items-center justify-center" style={[
+                    styles.button,
+                    {
+                        backgroundColor: Colors[useScheme].backgroundCalendar,
+                    }, pressed && styles.buttonPress
+                ]}
+                onPress={() => { navigation.navigate('AddReserva') }}
                 onPressIn={handlePressIn}
-                onPressOut={handlePressOut}>
+                onPressOut={handlePressOut}
+                >
                 <AntDesign name="adduser" size={32} color="white" />
             </Pressable>
         </>

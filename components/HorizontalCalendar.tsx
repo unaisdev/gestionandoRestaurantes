@@ -63,12 +63,8 @@ function generateHorizontalCalendarDates(days: number): Date[] {
     return result;
 }
 
-export default function HorizontalCalendar({
-    selectedDate,
-    setSelectedDate,
-}: Props) {
+function HorizontalCalendar( { selectedDate, setSelectedDate }: Props) {
     const colorScheme = useColorScheme();
-
 
     const dates: Date[] = useMemo(() => {
         return generateHorizontalCalendarDates(10);
@@ -166,3 +162,5 @@ const styles = StyleSheet.create({
         marginRight: 8,
     },
 });
+
+export default HorizontalCalendar;

@@ -18,7 +18,7 @@ import TabTwoScreen from '../screens/TabTwoScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 import { AntDesign } from '@expo/vector-icons';
-import AddReserva from '../screens/AddReserva';
+import AddReserva from '../screens/AddReservaScreen';
 import FloatingActionButton from '../components/FloatingActionButton';
 import { useState } from 'react';
 
