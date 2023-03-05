@@ -3,11 +3,11 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
-import { FontAwesome } from '@expo/vector-icons';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { FontAwesome, Ionicons } from '@expo/vector-icons';
+import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { ColorSchemeName, Pressable, View, Text } from 'react-native';
+import { ColorSchemeName, Pressable, View, Text, StyleSheet } from 'react-native';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -15,17 +15,40 @@ import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
-import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
+import { Reserva, RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
-import { AntDesign } from '@expo/vector-icons'; 
+import { AntDesign } from '@expo/vector-icons';
+import AddReserva from '../screens/AddReservaScreen';
+import FloatingActionButton from '../components/FloatingActionButton';
+import { createContext, useState } from 'react';
+
+interface ReservasContextType {
+  res: Reserva[];
+  addReserva: (user: string) => void;
+}
+
+const initialValues = {
+  res: [],
+  addReserva: () => {}
+}
+
+export const ReservasContext = createContext<ReservasContextType>({
+  res: [],
+  addReserva: () => { },
+});
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
+  const [reservas, setReservas] = useState<ReservasContextType>();
+
   return (
-    <NavigationContainer
-      linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <RootNavigator />
-    </NavigationContainer>
+    <ReservasContext.Provider value={initialValues}>
+      <NavigationContainer
+        linking={LinkingConfiguration}
+        theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <RootNavigator />
+      </NavigationContainer>
+    </ReservasContext.Provider>
+
   );
 }
 
@@ -37,11 +60,13 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   return (
+
     <Stack.Navigator>
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
+        <Stack.Screen name="AddReserva" component={AddReserva} options={{ title: 'Welcome' }} />
       </Stack.Group>
     </Stack.Navigator>
   );
@@ -55,19 +80,52 @@ const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
   const colorScheme = useColorScheme();
+  const [pressed, setPressed] = useState(false);
 
+  const handlePressIn = () => {
+    console.log("press");
+    setPressed(true);
+  };
+
+  const handlePressOut = () => {
+    setPressed(false);
+  };
   return (
     <BottomTab.Navigator
       initialRouteName="TabOne"
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarShowLabel: true,
         tabBarLabelStyle: {
-          marginBottom: 6,
+          fontSize: 10,
+          marginBottom: 8,
         },
-      }}>
+        tabBarIconStyle: {
+        },
+        tabBarStyle: {
+          position: "absolute",
+          bottom: 10,
+          left: 20,
+          right: 20,
+          borderWidth: 0.5,
+          borderColor: Colors[colorScheme].borderColor,
+          borderTopWidth: 0,
+          backgroundColor: "white",
+          borderRadius: 15,
+          height: 60,
+          shadowColor: Colors[colorScheme].borderColor,
+          shadowOffset: {
+            width: 0,
+            height: 0,
+          },
+          shadowOpacity: 0.7,
+          shadowRadius: 6.5,
+          elevation: 5,
+        },
+      }}
+    >
+
       <BottomTab.Screen
         name="TabOne"
-        
         component={TabOneScreen}
         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
           title: 'Inicio',
@@ -78,9 +136,9 @@ function BottomTabNavigator() {
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}>
-              <FontAwesome
-                name="info-circle"
-                size={25}
+              <AntDesign
+                name="setting"
+                size={20}
                 color={Colors[colorScheme].text}
                 style={{ marginRight: 15 }}
               />
@@ -88,14 +146,37 @@ function BottomTabNavigator() {
           ),
           headerLeft: () => (
             <View>
-              <Text style={{marginLeft: 10}}>A</Text>
+              <Text style={{ marginLeft: 10, fontSize: 8, textAlign: 'center' }}>GURE </Text>
+              <Text style={{ marginLeft: 10, fontSize: 10, textAlign: 'center' }}>AMETSA</Text>
             </View>
-        ),
+          ),
+
         })}
       />
+      {/* <BottomTab.Screen
+        name="AddReserva"
+        component={AddReserva}
+        options={({ navigation }: RootTabScreenProps<'AddReserva'>) => ({
+          title: "",
+
+          tabBarIcon: ({ color }) => <Ionicons name="ios-person-add-outline" size={24} color={color} />,
+          tabBarButton: (props) => 
+          <Pressable className="flex items-center justify-center" style={[styles.button, {
+            backgroundColor: Colors[colorScheme].backgroundCalendar,
+          }, pressed && styles.buttonPress]}
+            onPress={() => navigation.navigate('AddReserva')}
+            onPressIn={handlePressIn}
+            onPressOut={handlePressOut}>
+            <AntDesign name="adduser" size={32} color="white" />
+          </Pressable>,
+
+        })
+
+        }
+      /> */}
       <BottomTab.Screen
         name="TabTwo"
-      
+
         component={TabTwoScreen}
         options={{
           title: 'Configuración',
@@ -116,3 +197,30 @@ function TabBarIcon(props: {
 }) {
   return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
 }
+
+const styles = StyleSheet.create({
+  button: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    position: 'absolute',
+    bottom: 60,
+    right: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+
+    elevation: 10,
+  },
+
+  buttonPress: {
+    opacity: 0.5,
+  },
+});

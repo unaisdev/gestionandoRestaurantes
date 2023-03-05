@@ -11,14 +11,13 @@ const ReservaCard = ({ reserva }: { reserva: Reserva }) => {
     const colorScheme = useColorScheme();
 
     return (
-        <View style={styles.card} className="flex-1 flex flex-row items-center justify-between p-3 m-1 rounded-lg shadow-sm shadow-slate-600 border-gray-600">
-            <View className="basis-2/5 justify-center">
+        <View className="flex-1 flex flex-row mx-4 items-center justify-between border-b">
+            <View className="basis-2/5">
                 <Text style={styles.nombre} className="flex first-letter:uppercase text-center font-bold">{reserva.nombre}</Text>
                 <Text style={styles.personas} className="flex text-center">{reserva.personas} pers.</Text>
             </View>
 
-
-            <View className="basis-2/5 justify-center">
+            <View className="basis-2/5">
                 <Text style={styles.dia} className="flex text-center">{reserva.dia}</Text>
                 <Text style={styles.hora} className="flex text-center">{reserva.hora}</Text>
             </View>
@@ -49,6 +48,15 @@ const ReservaCard = ({ reserva }: { reserva: Reserva }) => {
 
 const styles = StyleSheet.create({
 
+    separator: {
+        marginVertical: 30,
+        height: 1,
+        width: '80%',
+    },
+
+    row: {
+
+    },
     nombre: {
         fontSize: 16,
     },
@@ -65,9 +73,6 @@ const styles = StyleSheet.create({
 
     },
 
-    card: {
-
-    }
 })
 
 export default ReservaCard;

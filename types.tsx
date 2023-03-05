@@ -17,6 +17,7 @@ export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
   Modal: undefined;
   NotFound: undefined;
+  AddReserva: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<
@@ -34,13 +35,12 @@ export type RootTabScreenProps<Screen extends keyof RootTabParamList> = Composit
   NativeStackScreenProps<RootStackParamList>
 >;
 
-export type Reserva = {
-  id: string;
+export interface Reserva {
   nombre: string;
   telefono: string;
   personas: number;
   dia: string;
   hora: string;
-  email?: string;
-  masinfo?: string;
+  email: string;
+  mas_info?: string;
 }

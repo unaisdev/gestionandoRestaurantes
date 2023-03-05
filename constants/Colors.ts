@@ -11,6 +11,7 @@ export default {
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorLight,
     borderColor: '#ccc',
+    inputPlaceHolders: '#ccc',
   },
   dark: {
     text: '#fff',
@@ -21,5 +22,7 @@ export default {
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorDark,
     borderColor: '#000',
+    inputPlaceHolders: '#ccc',
+
   },
 };
