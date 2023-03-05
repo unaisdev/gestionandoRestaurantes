@@ -40,7 +40,7 @@ const AddReservaForm = () => {
 
     const handleSubmit = async () => {
         try {
-            const response = await fetch('http://localhost:3000/api/reservar', {
+            const response = await fetch('http://192.168.1.133:3000/api/reservar', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -101,12 +101,7 @@ const AddReservaForm = () => {
 
                 <Button onPress={handleSubmit} title="Añadir Reserva" />
             </View>
-
-
-
-
         </Formik>
-
     )
 }
 
