@@ -7,18 +7,9 @@ import { RootTabScreenProps } from '../types';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import AddReservaForm from '../components/features/AddReservaForm'
-
-interface FormData {
-    firstName: string;
-    lastName: string;
-    email: string;
-  }
-  
+import AddReservaForm from '../components/features/AddReservaForm'  
 
 const AddReservaScreen = () => {
-  
-
     return (
         <View>
             <AddReservaForm />

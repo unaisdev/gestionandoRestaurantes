@@ -3,10 +3,12 @@ import { Button, NativeSyntheticEvent, Platform, StyleSheet, TextInput, TextInpu
 import { Formik, setIn } from 'formik';
 
 import { Text, View } from '../Themed';
-import { useState } from 'react';
-import { Reserva } from '../../types';
+import { useState, useContext } from 'react';
+import { Reserva, RootTabScreenProps } from '../../types';
 import useColorScheme from '../../hooks/useColorScheme';
 import Colors from '../../constants/Colors';
+import { useNavigation } from '@react-navigation/native';
+import { ReservasContext } from '../../navigation';
 
 interface ReservaState {
     nombre: string,
@@ -29,13 +31,16 @@ const initialResState = {
 }
 
 const AddReservaForm = () => {
+    const navigation = useNavigation();
     const colorScheme = useColorScheme();
+    const { res, addReserva } = useContext(ReservasContext);
+    const [data, setData] = useState<Reserva[]>([]);
 
     const [inputValues, setInputValues] = useState<Reserva>(initialResState);
 
     const handleSubmit = async () => {
         try {
-            const response = await fetch('http://192.168.1.133:3000/api/reservar', {
+            const response = await fetch('http://localhost:3000/api/reservar', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -43,8 +48,10 @@ const AddReservaForm = () => {
                 body: JSON.stringify(inputValues),
             });
             const data = await response.json();
-            console.log("hola" + JSON.stringify(inputValues));
-            console.error(data);
+
+            console.log(JSON.stringify(inputValues));
+            setData(data);
+            navigation.goBack();
         } catch (error) {
             console.error(error);
         }

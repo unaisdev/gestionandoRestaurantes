@@ -15,20 +15,40 @@ import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
-import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
+import { Reserva, RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 import { AntDesign } from '@expo/vector-icons';
 import AddReserva from '../screens/AddReservaScreen';
 import FloatingActionButton from '../components/FloatingActionButton';
-import { useState } from 'react';
+import { createContext, useState } from 'react';
+
+interface ReservasContextType {
+  res: Reserva[];
+  addReserva: (user: string) => void;
+}
+
+const initialValues = {
+  res: [],
+  addReserva: () => {}
+}
+
+export const ReservasContext = createContext<ReservasContextType>({
+  res: [],
+  addReserva: () => { },
+});
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
+  const [reservas, setReservas] = useState<ReservasContextType>();
+
   return (
-    <NavigationContainer
-      linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <RootNavigator />
-    </NavigationContainer>
+    <ReservasContext.Provider value={initialValues}>
+      <NavigationContainer
+        linking={LinkingConfiguration}
+        theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <RootNavigator />
+      </NavigationContainer>
+    </ReservasContext.Provider>
+
   );
 }
 
@@ -40,6 +60,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   return (
+
     <Stack.Navigator>
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />

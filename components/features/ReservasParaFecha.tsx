@@ -12,11 +12,7 @@ import FloatingActionButton from '../FloatingActionButton';
 import ReservaList from '../ReservaList';
 
 
-interface AddReservaFormProps {
-    addReserva: (reserva: Reserva) => void;
-}
-
-const ReservasParaFecha = ({ addReserva }: AddReservaFormProps) => {
+const ReservasParaFecha = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
 
     return (
