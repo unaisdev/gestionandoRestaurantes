@@ -15,6 +15,8 @@ function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
   return (
     <View className='flex-1 mb-10'>
       <ReservasParaFecha />
+      <FloatingActionButton />
+
     </View>
   );
   

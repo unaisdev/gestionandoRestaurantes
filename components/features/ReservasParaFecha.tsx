@@ -8,41 +8,23 @@ import HorizontalCalendar from '../HorizontalCalendar';
 import { Reserva } from '../../types';
 import axios from 'axios';
 import ReservaCard from '../ReservaCard';
+import FloatingActionButton from '../FloatingActionButton';
+import ReservaList from '../ReservaList';
 
-const ReservasParaFecha = () => {
+
+interface AddReservaFormProps {
+    addReserva: (reserva: Reserva) => void;
+}
+
+const ReservasParaFecha = ({ addReserva }: AddReservaFormProps) => {
     const [selectedDate, setSelectedDate] = useState(new Date());
-    const [data, setData] = useState<Reserva[]>([]);
-
-    const getReservas = async () => {
-        try {
-            const response = await axios.get('https://centrocivico-nextjs-ts.vercel.app/api/reservar', { params: { key: "holaquetalestamos" } });
-
-            const array = await response.data;
-            setData(array);
-            console.log(array);
-
-        } catch (error) {
-            console.error(error);
-        } finally {
-
-        }
-    };
-
-    useEffect(() => {
-        getReservas();
-    }, []);
-
 
     return (
         <View>
             <HorizontalCalendar
                 selectedDate={selectedDate}
                 setSelectedDate={setSelectedDate} />
-            <FlatList
-                data={data}
-                renderItem={({ item }) => <ReservaCard reserva={item} />}
-                keyExtractor={item => item.id}
-            />
+            <ReservaList selectedDate={selectedDate}/>
         </View>
     )
 }

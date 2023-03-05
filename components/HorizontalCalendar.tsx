@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import {
     FlatList,
     Dimensions,
@@ -10,6 +10,8 @@ import { Text, View } from './Themed';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
+import axios from 'axios';
+import { Reserva } from '../types';
 
 
 const { width } = Dimensions.get('window');
@@ -46,7 +48,6 @@ function isToday(date: Date): boolean {
     if (newDate.getFullYear() == date.getFullYear() &&
         newDate.getMonth() == date.getMonth() &&
         newDate.getDate() == date.getDate()) {
-        console.log(newDate.getFullYear())
         return new Date().getDate() == date.getDate();
     }
 
@@ -63,7 +64,8 @@ function generateHorizontalCalendarDates(days: number): Date[] {
     return result;
 }
 
-function HorizontalCalendar( { selectedDate, setSelectedDate }: Props) {
+
+function HorizontalCalendar({ selectedDate, setSelectedDate }: Props) {
     const colorScheme = useColorScheme();
 
     const dates: Date[] = useMemo(() => {

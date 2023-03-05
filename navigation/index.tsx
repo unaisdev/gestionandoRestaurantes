@@ -125,7 +125,8 @@ function BottomTabNavigator() {
           ),
           headerLeft: () => (
             <View>
-              <Text style={{ marginLeft: 10 }}>A</Text>
+              <Text style={{ marginLeft: 10, fontSize: 8, textAlign: 'center' }}>GURE </Text>
+              <Text style={{ marginLeft: 10, fontSize: 10, textAlign: 'center' }}>AMETSA</Text>
             </View>
           ),
 

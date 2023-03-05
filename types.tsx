@@ -36,12 +36,11 @@ export type RootTabScreenProps<Screen extends keyof RootTabParamList> = Composit
 >;
 
 export interface Reserva {
-  id: string;
   nombre: string;
   telefono: string;
   personas: number;
   dia: string;
   hora: string;
-  email?: string;
-  masinfo?: string;
+  email: string;
+  mas_info?: string;
 }
