@@ -22,32 +22,14 @@ import AddReserva from '../screens/AddReservaScreen';
 import FloatingActionButton from '../components/FloatingActionButton';
 import { createContext, useState } from 'react';
 
-interface ReservasContextType {
-  res: Reserva[];
-  addReserva: (user: string) => void;
-}
-
-const initialValues = {
-  res: [],
-  addReserva: () => {}
-}
-
-export const ReservasContext = createContext<ReservasContextType>({
-  res: [],
-  addReserva: () => { },
-});
-
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
-  const [reservas, setReservas] = useState<ReservasContextType>();
 
   return (
-    <ReservasContext.Provider value={initialValues}>
       <NavigationContainer
         linking={LinkingConfiguration}
         theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <RootNavigator />
       </NavigationContainer>
-    </ReservasContext.Provider>
 
   );
 }

@@ -8,9 +8,10 @@ import { Reserva, RootTabScreenProps } from '../../types';
 import useColorScheme from '../../hooks/useColorScheme';
 import Colors from '../../constants/Colors';
 import { useNavigation } from '@react-navigation/native';
-import { ReservasContext } from '../../navigation';
+import { ReservasContext, useReservas } from '../context/ReservasContext';
 
 interface ReservaState {
+    id: number,
     nombre: string,
     telefono: string,
     personas: number,
@@ -21,6 +22,7 @@ interface ReservaState {
 }
 
 const initialResState = {
+    id: new Date().getTime(),
     nombre: '',
     telefono: '',
     personas: 0,
@@ -33,8 +35,8 @@ const initialResState = {
 const AddReservaForm = () => {
     const navigation = useNavigation();
     const colorScheme = useColorScheme();
-    const { res, addReserva } = useContext(ReservasContext);
-    const [data, setData] = useState<Reserva[]>([]);
+
+    const { reservas, guardarReserva, poblarLista } = useReservas()
 
     const [inputValues, setInputValues] = useState<Reserva>(initialResState);
 
@@ -49,8 +51,8 @@ const AddReservaForm = () => {
             });
             const data = await response.json();
 
+            guardarReserva(inputValues)
             console.log(JSON.stringify(inputValues));
-            setData(data);
             navigation.goBack();
         } catch (error) {
             console.error(error);

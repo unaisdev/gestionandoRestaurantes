@@ -4,6 +4,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
+import { ReservasContext, ReservasProvider } from './components/context/ReservasContext';
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -14,8 +15,11 @@ export default function App() {
   } else {
     return (
       <SafeAreaProvider>
-        <Navigation colorScheme={colorScheme} />
-        <StatusBar />
+        <ReservasProvider>
+          <Navigation colorScheme={colorScheme} />
+          <StatusBar />
+        </ReservasProvider>
+
       </SafeAreaProvider>
     );
   }
