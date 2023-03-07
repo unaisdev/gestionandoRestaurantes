@@ -10,17 +10,6 @@ import Colors from '../../constants/Colors';
 import { useNavigation } from '@react-navigation/native';
 import { ReservasContext, useReservas } from '../context/ReservasContext';
 
-interface ReservaState {
-    id: number,
-    nombre: string,
-    telefono: string,
-    personas: number,
-    dia: string,
-    hora: string,
-    email: string,
-    mas_info: string,
-}
-
 const initialResState = {
     id: new Date().getTime(),
     nombre: '',
@@ -41,6 +30,7 @@ const AddReservaForm = () => {
     const [inputValues, setInputValues] = useState<Reserva>(initialResState);
 
     const handleSubmit = async () => {
+        console.log("POST" + inputValues);
         try {
             const response = await fetch('http://192.168.1.133:3000/api/reservar', {
                 method: 'POST',
@@ -50,9 +40,9 @@ const AddReservaForm = () => {
                 body: JSON.stringify(inputValues),
             });
             const data = await response.json();
+            console.log(data);
 
             guardarReserva(inputValues)
-            console.log(JSON.stringify(inputValues));
             navigation.goBack();
         } catch (error) {
             console.error(error);
