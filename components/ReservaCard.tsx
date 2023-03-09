@@ -1,14 +1,54 @@
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
-import { Pressable, StyleSheet, } from "react-native";
+import { Alert, GestureResponderEvent, Pressable, StyleSheet, } from "react-native";
 import { Text, View } from '../components/Themed';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import { Reserva } from "../types";
+import axios from 'axios';
 
 
 const ReservaCard = ({ reserva }: { reserva: Reserva }) => {
     const colorScheme = useColorScheme();
+
+    const wannaDelete = () =>
+        Alert.alert(`${reserva.nombre}`, `¿estás seguro de querer eliminar la reserva?`, [
+            {
+                text: 'Cancelar',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+            },
+            {
+                text: 'Eliminar',
+                onPress: deleteReserva
+            },
+        ]);
+
+    const deleteReserva = async () => {
+        try {
+            const responseAxios = await axios.delete(
+                "http://192.168.1.133:3000/api/reservar",
+                {
+                    params: {
+                        key: "holaquetalestamos",
+                        id: reserva.id,
+
+                    },
+                }
+            );
+            // const response = await fetch('http://192.168.1.133:3000/api/reservar', {
+            //     method: 'DELETE',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify({
+            //     }),
+            // });
+            // const data = await response.json();
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     return (
         <View className="flex-1 flex flex-row mx-4 items-center justify-between border-b">
@@ -25,7 +65,7 @@ const ReservaCard = ({ reserva }: { reserva: Reserva }) => {
             <View className='flex flex-col justify-center'>
                 <Pressable
                     className='p-3'
-                    onPress={() => { console.log("edit pressed") }}
+                    onPress={wannaDelete}
                     style={({ pressed }) => ({
                         opacity: pressed ? 0.5 : 1,
                     })}>

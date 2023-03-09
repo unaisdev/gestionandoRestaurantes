@@ -52,7 +52,9 @@ export const ReservasProvider = ({ children }: { children: React.ReactNode }) =>
             console.log("reservas:" + JSON.stringify(reservas, null, 4));
             
             setLoadingReservas(false)
-            setReservas(response.data)
+            setReservas(() => {
+                return [...response.data]
+            })
             console.log("reservasPost:" + JSON.stringify(reservas, null, 4));
 
         } catch (error) {
