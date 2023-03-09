@@ -23,13 +23,13 @@ export const ReservasProvider = ({ children }: { children: React.ReactNode }) =>
     const [loadingReservas, setLoadingReservas] = useState(true)
     
     const guardarReserva = (reserva: Reserva) => {
-        console.log("PRE:" + JSON.stringify(reservas, null, 4));
-        reservas?.push(reserva)
+        // reservas?.push(reserva)
 
-        setReservas(reservas)
+        // setReservas(reservas)
 
-        console.log("POST:" + JSON.stringify(reservas, null, 4));
-
+        setReservas((previus) => {
+            return [...previus, reserva]
+        })
     }
 
     const poblarLista = async (fecha: string) => {
@@ -48,14 +48,9 @@ export const ReservasProvider = ({ children }: { children: React.ReactNode }) =>
                     },
                 }
             );
-            console.log("response:" + JSON.stringify(response.data, null, 4));
-            console.log("reservas:" + JSON.stringify(reservas, null, 4));
-            
+
+            setReservas(response.data)
             setLoadingReservas(false)
-            setReservas(() => {
-                return [...response.data]
-            })
-            console.log("reservasPost:" + JSON.stringify(reservas, null, 4));
 
         } catch (error) {
             console.error(error);

@@ -6,6 +6,7 @@ import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import { Reserva } from "../types";
 import axios from 'axios';
+import React from 'react';
 
 
 const ReservaCard = ({ reserva }: { reserva: Reserva }) => {
@@ -28,7 +29,7 @@ const ReservaCard = ({ reserva }: { reserva: Reserva }) => {
         try {
             const responseAxios = await axios.delete(
                 "http://192.168.1.133:3000/api/reservar",
-                {
+                {   
                     params: {
                         key: "holaquetalestamos",
                         id: reserva.id,
@@ -51,12 +52,12 @@ const ReservaCard = ({ reserva }: { reserva: Reserva }) => {
     }
 
     return (
-        <View className="flex-1 flex flex-row mx-4 items-center justify-between border-b">
-            <View className="basis-2/5">
+        <View className="flex flex-row mx-4 items-center justify-between border-b">
+           <View className="basis-2/5">
                 <Text style={styles.nombre} className="flex first-letter:uppercase text-center font-bold">{reserva.nombre}</Text>
                 <Text style={styles.personas} className="flex text-center">{reserva.personas} pers.</Text>
             </View>
-
+ 
             <View className="basis-2/5">
                 <Text style={styles.dia} className="flex text-center">{reserva.dia}</Text>
                 <Text style={styles.hora} className="flex text-center">{reserva.hora}</Text>
@@ -115,4 +116,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default ReservaCard;
+export default React.memo(ReservaCard)

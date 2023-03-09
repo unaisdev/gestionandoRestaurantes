@@ -4,14 +4,16 @@ import { ActivityIndicator, FlatList } from "react-native";
 import { Reserva } from "../types";
 import ReservaCard from "./ReservaCard";
 import { ReservasContext, useReservas } from "./context/ReservasContext";
-import { View } from "./Themed";
+import { View, Text } from "./Themed";
 
 interface Props {
   selectedDate: Date;
 }
 
+// const initial: Reserva[] = [{ "dia": "09/03/2023", "email": "rqwereq", "hora": "werqwerqwe", "id": 40, "mas_info": "", "nombre": "pepep", "personas": 0, "telefono": "" }, { "dia": "09/03/2023", "email": "eqweqwe", "hora": "qweqweqw", "id": 41, "mas_info": "", "nombre": "pepepepepep", "personas": 0, "telefono": "" }, { "dia": "09/03/2023", "email": "wewqeqwe", "hora": "qweqweq", "id": 42, "mas_info": "", "nombre": "alfonso", "personas": 0, "telefono": "" }, { "dia": "09/03/2023", "email": "", "hora": "qwqeqwe", "id": 43, "mas_info": "", "nombre": "qwerqwer", "personas": 0, "telefono": "" }]
+
 const ReservaList = ({ selectedDate }: Props) => {
-  const { reservas, guardarReserva, poblarLista, loadingReservas } = useReservas();
+  const { reservas, guardarReserva, poblarLista, loadingReservas, eliminarReserva } = useReservas();
 
   // Formateamos los valores en el formato "dd/mm/yyyy"
   const selectedDay: string = useMemo<string>((): string => {
@@ -26,14 +28,14 @@ const ReservaList = ({ selectedDate }: Props) => {
   useEffect(() => {
 
     poblarLista(selectedDay)
-    
-  }, [selectedDate])
 
+  }, [selectedDay])
 
+  console.log({ reservas })
 
 
   return (
-    <View style={{ display: "flex"}}>
+    <View style={{ display: "flex" }}>
       {loadingReservas && (
         <ActivityIndicator
           size="large"
@@ -46,7 +48,8 @@ const ReservaList = ({ selectedDate }: Props) => {
       <FlatList
         data={reservas}
         renderItem={({ item }) => <ReservaCard reserva={item} />}
-        keyExtractor={item => item.id}
+        extraData={reservas}
+        keyExtractor={item => String(item.id)}
       />
 
     </View>
