@@ -3,15 +3,15 @@ import { Button, NativeSyntheticEvent, Platform, StyleSheet, TextInput, TextInpu
 import { Formik, setIn } from 'formik';
 
 import { Text, View } from '../Themed';
-import { useState, useContext } from 'react';
+import { useState, useContext, useId } from 'react';
 import { Reserva, RootTabScreenProps } from '../../types';
 import useColorScheme from '../../hooks/useColorScheme';
 import Colors from '../../constants/Colors';
 import { useNavigation } from '@react-navigation/native';
 import { ReservasContext, useReservas } from '../context/ReservasContext';
+import { ReservaInputsValue } from '../context/types';
 
 const initialResState = {
-    id: new Date().getTime(),
     nombre: '',
     telefono: '',
     personas: 0,
@@ -26,11 +26,12 @@ const AddReservaForm = () => {
     const colorScheme = useColorScheme();
 
     const { reservas, guardarReserva, poblarLista } = useReservas()
-
-    const [inputValues, setInputValues] = useState<Reserva>(initialResState);
+    const uuId = useId();
+    const [inputValues, setInputValues] = useState<ReservaInputsValue>(initialResState);
 
     const handleSubmit = async () => {
         console.log("POST" + inputValues);
+        
         try {
             const response = await fetch('http://192.168.1.133:3000/api/reservar', {
                 method: 'POST',
@@ -42,7 +43,7 @@ const AddReservaForm = () => {
             const data = await response.json();
             console.log(data);
 
-            guardarReserva(inputValues)
+            guardarReserva({...inputValues, id: uuId})
             navigation.goBack();
         } catch (error) {
             console.error(error);
@@ -51,7 +52,7 @@ const AddReservaForm = () => {
 
     const handleChange = (event: NativeSyntheticEvent<TextInputChangeEventData>, fieldName: keyof Reserva) => {
         const { text } = event.nativeEvent;
-        setInputValues((prevInputValues) => ({
+        setInputValues((prevInputValues: ReservaInputsValue) => ({
             ...prevInputValues,
             [fieldName]: text,
         }));

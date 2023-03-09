@@ -5,12 +5,14 @@ import axios from "axios";
 
 interface ReservasContext {
     reservas: Reserva[];
+    loadingReservas: boolean;
     guardarReserva: (reserva: Reserva) => void;
-    poblarLista: (reserva: Reserva[], fecha: string) => void;
+    poblarLista: (fecha: string) => void;
 }
 
 export const ReservasContext = createContext<ReservasContext>({
     reservas: [],
+    loadingReservas: true,
     guardarReserva: () => ({}),
     poblarLista: () => ({}),
 });
@@ -18,16 +20,24 @@ export const ReservasContext = createContext<ReservasContext>({
 
 export const ReservasProvider = ({ children }: { children: React.ReactNode }) => {
     const [reservas, setReservas] = useState<Reserva[]>([])
-
+    const [loadingReservas, setLoadingReservas] = useState(true)
+    
     const guardarReserva = (reserva: Reserva) => {
-        setReservas(previus => {
-            console.log(previus)
-            return [...previus, reserva]
-        })
+        console.log("PRE:" + JSON.stringify(reservas, null, 4));
+        reservas?.push(reserva)
+
+        setReservas(reservas)
+
+        console.log("POST:" + JSON.stringify(reservas, null, 4));
+
     }
 
-    const poblarLista = async (reservas: Reserva[], fecha: string) => {
-        console.log("CARGANDO RESERVAS DIA: " + fecha);
+    const poblarLista = async (fecha: string) => {
+        console.log("poblando lista: " + fecha)
+
+        setLoadingReservas(true)
+        setReservas([])
+
         try {
             const response = await axios.get<Reserva[]>(
                 "http://192.168.1.133:3000/api/reservar",
@@ -38,14 +48,12 @@ export const ReservasProvider = ({ children }: { children: React.ReactNode }) =>
                     },
                 }
             );
-
-            console.log(response.data);
-
-            setReservas(() => {
-                return [...response.data]
-            })
-
-            return response.data
+            console.log("response:" + JSON.stringify(response.data, null, 4));
+            console.log("reservas:" + JSON.stringify(reservas, null, 4));
+            
+            setLoadingReservas(false)
+            setReservas(response.data)
+            console.log("reservasPost:" + JSON.stringify(reservas, null, 4));
 
         } catch (error) {
             console.error(error);
@@ -55,7 +63,7 @@ export const ReservasProvider = ({ children }: { children: React.ReactNode }) =>
 
 
 
-    const values = { reservas, guardarReserva, poblarLista };
+    const values = { reservas, loadingReservas, guardarReserva, poblarLista };
 
     return (
         <ReservasContext.Provider value={values}>
@@ -66,7 +74,7 @@ export const ReservasProvider = ({ children }: { children: React.ReactNode }) =>
 
 
 export const useReservas = () => {
-    const { reservas, guardarReserva, poblarLista } = useContext(ReservasContext)
+    const { reservas, loadingReservas, guardarReserva, poblarLista } = useContext(ReservasContext)
 
-    return { reservas, guardarReserva, poblarLista }
+    return { reservas, loadingReservas, guardarReserva, poblarLista }
 }
