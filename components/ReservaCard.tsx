@@ -7,10 +7,14 @@ import useColorScheme from '../hooks/useColorScheme';
 import { Reserva } from "../types";
 import axios from 'axios';
 import React from 'react';
+import { useReservas } from './context/ReservasContext';
+import { useNavigation } from '@react-navigation/native';
 
 
 const ReservaCard = ({ reserva }: { reserva: Reserva }) => {
     const colorScheme = useColorScheme();
+    const { reservas, eliminarReserva } = useReservas()
+    const navigation = useNavigation();
 
     const wannaDelete = () =>
         Alert.alert(`${reserva.nombre}`, `¿estás seguro de querer eliminar la reserva?`, [
@@ -26,38 +30,18 @@ const ReservaCard = ({ reserva }: { reserva: Reserva }) => {
         ]);
 
     const deleteReserva = async () => {
-        try {
-            const responseAxios = await axios.delete(
-                "http://192.168.1.133:3000/api/reservar",
-                {   
-                    params: {
-                        key: "holaquetalestamos",
-                        id: reserva.id,
+        console.log("eliminar reserva: " + { reserva })
+        eliminarReserva(reserva)
 
-                    },
-                }
-            );
-            // const response = await fetch('http://192.168.1.133:3000/api/reservar', {
-            //     method: 'DELETE',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify({
-            //     }),
-            // });
-            // const data = await response.json();
-        } catch (error) {
-            console.error(error);
-        }
     }
 
     return (
-        <View className="flex flex-row mx-4 items-center justify-between border-b">
-           <View className="basis-2/5">
+        <View className="flex flex-row mx-4 items-center justify-between">
+            <View className="basis-2/5">
                 <Text style={styles.nombre} className="flex first-letter:uppercase text-center font-bold">{reserva.nombre}</Text>
                 <Text style={styles.personas} className="flex text-center">{reserva.personas} pers.</Text>
             </View>
- 
+
             <View className="basis-2/5">
                 <Text style={styles.dia} className="flex text-center">{reserva.dia}</Text>
                 <Text style={styles.hora} className="flex text-center">{reserva.hora}</Text>
@@ -75,7 +59,7 @@ const ReservaCard = ({ reserva }: { reserva: Reserva }) => {
                 </Pressable>
                 <Pressable
                     className='p-3'
-                    onPress={() => { console.log("pressed") }}
+                    onPress={() => { navigation.navigate('AddReserva', { reserva }) }}
                     style={({ pressed }) => ({
                         opacity: pressed ? 0.5 : 1,
                     })}>
@@ -88,7 +72,6 @@ const ReservaCard = ({ reserva }: { reserva: Reserva }) => {
 }
 
 const styles = StyleSheet.create({
-
     separator: {
         marginVertical: 30,
         height: 1,

@@ -5,8 +5,8 @@ export default {
   light: {
     text: '#000',
     background: '#fff',
-    backgroundDay: '#000',
-    backgroundCalendar: '#2596be',
+    backgroundDay: '#DAAA00',
+    backgroundCalendar: '#9C8412',
     tint: tintColorLight,
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorLight,

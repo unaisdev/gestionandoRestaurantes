@@ -12,11 +12,12 @@ import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import axios from 'axios';
 import { Reserva } from '../types';
+import { useReservas } from './context/ReservasContext';
 
 
 const { width } = Dimensions.get('window');
 const ITEM_WIDTH = width * 0.12;
-const ITEM_HEIGHT = 70;
+const ITEM_HEIGHT = 60;
 const ITEM_OFFSET = ITEM_WIDTH + 18;
 interface Props {
     selectedDate: Date;
@@ -67,9 +68,10 @@ function generateHorizontalCalendarDates(days: number): Date[] {
 
 function HorizontalCalendar({ selectedDate, setSelectedDate }: Props) {
     const colorScheme = useColorScheme();
+    const { reservas } = useReservas();
 
     const dates: Date[] = useMemo(() => {
-        return generateHorizontalCalendarDates(10);
+        return generateHorizontalCalendarDates(30);
     }, []);
 
     const onDatePress = (date: Date) => {
@@ -106,18 +108,74 @@ function HorizontalCalendar({ selectedDate, setSelectedDate }: Props) {
             <Pressable
                 onPress={() => onDatePress(item)}
                 style={[styles.item, isActive && { backgroundColor: Colors[colorScheme].backgroundDay }]}>
-                <Text style={[styles.dateOutput, isActive && styles.activeText]}>
+                <Text style={isToday(item) ? styles.todayNumber : [styles.dateOutput, isActive && styles.activeText]}>
                     {dayNumber}
                 </Text>
-                <Text style={[styles.dayStyle, isActive && styles.activeText]}>
+                <Text style={isToday(item) ? styles.todayText : [styles.dayStyle, isActive && styles.activeText]}>
                     {isToday(item) ? 'Hoy' : dayString}
                 </Text>
             </Pressable>
         );
     };
 
+    const getDateMonth = () => {
+        const month = new Intl.DateTimeFormat('es', { month: 'long' }).format(selectedDate)
+
+        return month.charAt(0).toUpperCase() + month.slice(1);
+    }
+
+    const getMonthNumber = () => {
+        const options: Intl.DateTimeFormatOptions = { month: '2-digit' };
+        const mesConCero = selectedDate.toLocaleString('es', options);
+        return mesConCero; // "03"
+    }
+
+
+
+    // const NumReservas = () => {
+    //     return (
+    //         <View>
+    //             <Text
+    //                 style={{
+    //                     paddingTop: 5,
+    //                     paddingHorizontal: 10
+    //                 }}>Nº de Reservas: {reservas.length}</Text>
+    //         </View>
+    //     )
+    // }
+
+    const CalendarioTop = () => {
+        return (
+            <View
+                className='flex flex-row justify-evenly px-6'
+                style={{
+                    backgroundColor: Colors[colorScheme].backgroundCalendar,
+                }}>
+
+                <FechaCalendario />
+            </View>
+        )
+    }
+
+    const FechaCalendario = () => {
+        return (
+            <View
+                className='flex flex-row px-6 pt-2'
+                style={{
+                    backgroundColor: Colors[colorScheme].backgroundCalendar,
+                }}>
+                <Text className='px-3'>{getDateMonth()}</Text>
+                <Text className='px-1'>{getMonthNumber()}</Text>
+                <Text className='px-1'>/</Text>
+                <Text className='px-1'>{selectedDate.getFullYear()}</Text>
+            </View>
+
+        )
+    }
+
     return (
         <View>
+            <CalendarioTop />
             <FlatList
                 style={{ backgroundColor: Colors[colorScheme].backgroundCalendar }}
                 data={dates}
@@ -163,6 +221,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginRight: 8,
     },
+    todayNumber: {
+        fontWeight: '500',
+        fontSize: 20
+    },
+    todayText: {
+        fontWeight: '500',
+        fontStyle: 'italic',
+        fontSize: 18
+    }
 });
 
 export default HorizontalCalendar;

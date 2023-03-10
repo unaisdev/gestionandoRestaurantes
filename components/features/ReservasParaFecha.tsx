@@ -16,7 +16,7 @@ const ReservasParaFecha = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
 
     return (
-        <View>
+        <View className='flex-1'>
             <HorizontalCalendar
                 selectedDate={selectedDate}
                 setSelectedDate={setSelectedDate} />

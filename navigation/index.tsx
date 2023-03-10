@@ -18,7 +18,7 @@ import TabTwoScreen from '../screens/TabTwoScreen';
 import { Reserva, RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 import { AntDesign } from '@expo/vector-icons';
-import AddReserva from '../screens/AddReservaScreen';
+import AddReserva from '../screens/AddEditReservaScreen';
 import FloatingActionButton from '../components/FloatingActionButton';
 import { createContext, useState } from 'react';
 
@@ -48,7 +48,7 @@ function RootNavigator() {
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
-        <Stack.Screen name="AddReserva" component={AddReserva} options={{ title: 'Welcome' }} />
+        <Stack.Screen name="AddReserva" component={AddReserva} options={{ title: 'Añadir o Editar Reserva' }} />
       </Stack.Group>
     </Stack.Navigator>
   );

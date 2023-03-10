@@ -32,7 +32,7 @@ const FloatingActionButton = () => {
                         backgroundColor: Colors[useScheme].backgroundCalendar,
                     }, pressed && styles.buttonPress
                 ]}
-                onPress={() => { navigation.navigate('AddReserva') }}
+                onPress={() => { navigation.navigate('AddReserva', {}) }}
                 onPressIn={handlePressIn}
                 onPressOut={handlePressOut}
                 >

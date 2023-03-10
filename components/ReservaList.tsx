@@ -35,7 +35,7 @@ const ReservaList = ({ selectedDate }: Props) => {
 
 
   return (
-    <View style={{ display: "flex" }}>
+    <View style={{ display: "flex", flex: 1 }}>
       {loadingReservas && (
         <ActivityIndicator
           size="large"
