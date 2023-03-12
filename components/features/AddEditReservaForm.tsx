@@ -10,19 +10,45 @@ import Colors from '../../constants/Colors';
 import { useNavigation } from '@react-navigation/native';
 import { ReservasContext, useReservas } from '../context/ReservasContext';
 import { ReservaInputsValue } from '../context/types';
-import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
+import DateTimePicker, { DateTimePickerAndroid, DateTimePickerEvent } from '@react-native-community/datetimepicker';
 
 type Props = {
     reserva: Reserva;
 }
+
+const dateToString = (date: Date) => {
+    console.log(date);
+
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+}
+
+const stringToDate = (date: string) => {
+    const [dia, mes, anio] = date.split("/");
+    return new Date(Number(anio), Number(mes) - 1, Number(dia));
+}
+
+const hourToString = (date: Date) => {
+    return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+}
+
+const stringToHourDate = (hour: string) => {
+    console.log("string to hour", hour)
+
+    const [hours, minutes] = hour.split(':');
+    return new Date(0, 0, 0, parseInt(hours), parseInt(minutes));
+}
+
 
 const AddReservaForm = ({ reserva }: Props) => {
     const initialResState = {
         nombre: reserva.nombre || '',
         telefono: reserva.telefono || '',
         personas: reserva.personas || 0,
-        dia: reserva.dia || '',
-        hora: reserva.hora || '',
+        dia: reserva.dia || dateToString(new Date()),
+        hora: reserva.hora || hourToString(new Date()),
         email: reserva.email || '',
         mas_info: reserva.mas_info || '',
     }
@@ -33,12 +59,6 @@ const AddReservaForm = ({ reserva }: Props) => {
 
     const [inputValues, setInputValues] = useState<ReservaInputsValue>(initialResState);
     const [date, setDate] = useState(new Date());
-
-    const onChange = (event, selectedDate) => {
-        const currentDate = selectedDate;
-        setDate(currentDate);
-
-    };
 
     const handleSubmit = async () => {
         console.log("POST" + inputValues);
@@ -55,11 +75,28 @@ const AddReservaForm = ({ reserva }: Props) => {
         }));
     };
 
+    const handleDateTimeChange = (event: DateTimePickerEvent, fieldName: keyof Reserva) => {
+        const { timestamp } = event.nativeEvent;
+        let dateD: string
+
+        if (fieldName === 'hora') {
+            dateD = hourToString(new Date(String(timestamp)))
+        } else if (fieldName === 'dia') {
+            dateD = dateToString(new Date(String(timestamp)))
+        }
+
+        setInputValues((prevInputValues: ReservaInputsValue) => ({
+            ...prevInputValues,
+            [fieldName]: dateD
+        }));
+    }
+
     return (
         <Formik
             onSubmit={handleSubmit}
             initialValues={inputValues || reserva}>
             <View>
+                <Text>{JSON.stringify(inputValues, null, 4)}</Text>
                 <TextInput
                     nativeID='name'
                     style={styles.inputText}
@@ -71,26 +108,20 @@ const AddReservaForm = ({ reserva }: Props) => {
                 <View className='flex flex-row justify-around p-3'>
                     <DateTimePicker
                         testID="dateTimePicker"
-                        value={date}
+                        value={stringToDate(inputValues.dia)}
                         mode='date'
-                        onChange={onChange}
+                        onChange={(event) => handleDateTimeChange(event, 'dia')}
                     />
 
                     <DateTimePicker
                         testID="dateTimePicker"
-                        value={date}
+                        value={stringToHourDate(inputValues.hora)}
                         mode='time'
                         is24Hour={true}
-                        onChange={onChange}
+                        onChange={(event) => handleDateTimeChange(event, 'hora')}
                     />
-                </View>
-                <TextInput
-                    style={styles.inputText}
-                    placeholder='12/03/2023*'
-                    placeholderTextColor={Colors[colorScheme].inputPlaceHolders}
-                    onChange={(event) => handleChange(event, 'dia')}
-                    value={inputValues.dia} />
 
+                </View>
 
                 <TextInput
                     style={styles.inputText}
