@@ -1,14 +1,15 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useMemo, useState } from "react";
 import { Reserva } from "../../types";
 import { View } from "../Themed";
 import axios from "axios";
 import { ReservaInputsValue } from "./types";
+import { useDateContext } from "./DateContext";
 
 interface ReservasContext {
     reservas: Reserva[];
     loadingReservas: boolean;
     guardarReserva: (inputValues: ReservaInputsValue) => void;
-    poblarLista: (fecha: string) => void;
+    poblarArray: () => void;
     eliminarReserva: (reserva: Reserva) => void;
 }
 
@@ -16,15 +17,28 @@ export const ReservasContext = createContext<ReservasContext>({
     reservas: [],
     loadingReservas: true,
     guardarReserva: () => ({}),
-    poblarLista: () => ({}),
+    poblarArray: () => ({}),
     eliminarReserva: () => ({}),
 });
+
 
 
 export const ReservasProvider = ({ children }: { children: React.ReactNode }) => {
     const [reservas, setReservas] = useState<Reserva[]>([])
     const [loadingReservas, setLoadingReservas] = useState(true)
+    const [selectedDateDay, setSelectedDate] = useState(new Date())
+    const { selectedDay, setSelectedDay } = useDateContext();
+
+    const selectedDayString: string = useMemo<string>((): string => {
+        const day = selectedDateDay.getDate();
+        const month = selectedDateDay.getMonth() + 1;
+        const year = selectedDateDay.getFullYear();
     
+        return `${day.toString().padStart(2, "0")}/${month.toString().padStart(2, "0")}/${year}`;
+    
+      }, [selectedDay])
+
+
     const guardarReserva = async (inputValues: ReservaInputsValue) => {
         // reservas?.push(reserva)        
         try {
@@ -80,19 +94,16 @@ export const ReservasProvider = ({ children }: { children: React.ReactNode }) =>
         }
     }
 
-    const poblarLista = async (fecha: string) => {
-        console.log("poblando lista: " + fecha)
+    const poblarArray = async () => {
 
         setLoadingReservas(true)
         setReservas([])
-
         try {
             const response = await axios.get<Reserva[]>(
                 "http://192.168.1.133:3000/api/reservar",
                 {
                     params: {
                         key: "holaquetalestamos",
-                        fecha: fecha,
                     },
                 }
             );
@@ -106,9 +117,7 @@ export const ReservasProvider = ({ children }: { children: React.ReactNode }) =>
 
     }
 
-
-
-    const values = { reservas, loadingReservas, guardarReserva, poblarLista, eliminarReserva };
+    const values = { reservas, selectedDateDay, loadingReservas, guardarReserva, poblarArray, eliminarReserva };
 
     return (
         <ReservasContext.Provider value={values}>
@@ -119,7 +128,7 @@ export const ReservasProvider = ({ children }: { children: React.ReactNode }) =>
 
 
 export const useReservas = () => {
-    const { reservas, loadingReservas, guardarReserva, poblarLista, eliminarReserva } = useContext(ReservasContext)
+    const { reservas, loadingReservas, guardarReserva, poblarArray, eliminarReserva } = useContext(ReservasContext)
 
-    return { reservas, loadingReservas, guardarReserva, poblarLista, eliminarReserva }
+    return { reservas, loadingReservas, guardarReserva, poblarArray, eliminarReserva }
 }

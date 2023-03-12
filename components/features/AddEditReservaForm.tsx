@@ -11,14 +11,13 @@ import { useNavigation } from '@react-navigation/native';
 import { ReservasContext, useReservas } from '../context/ReservasContext';
 import { ReservaInputsValue } from '../context/types';
 import DateTimePicker, { DateTimePickerAndroid, DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import { useDateContext } from '../context/DateContext';
 
 type Props = {
     reserva: Reserva;
 }
 
 const dateToString = (date: Date) => {
-    console.log(date);
-
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const year = date.getFullYear();
@@ -27,6 +26,7 @@ const dateToString = (date: Date) => {
 
 const stringToDate = (date: string) => {
     const [dia, mes, anio] = date.split("/");
+    console.log(new Date(Number(anio), Number(mes) - 1, Number(dia)))
     return new Date(Number(anio), Number(mes) - 1, Number(dia));
 }
 
@@ -43,22 +43,24 @@ const stringToHourDate = (hour: string) => {
 
 
 const AddReservaForm = ({ reserva }: Props) => {
+    const [date, setDate] = useState(new Date());
+    const { selectedDay } = useDateContext();
+
     const initialResState = {
         nombre: reserva.nombre || '',
         telefono: reserva.telefono || '',
         personas: reserva.personas || 0,
-        dia: reserva.dia || dateToString(new Date()),
+        dia: reserva.dia || dateToString(selectedDay),
         hora: reserva.hora || hourToString(new Date()),
         email: reserva.email || '',
         mas_info: reserva.mas_info || '',
     }
+    
+    const [inputValues, setInputValues] = useState<ReservaInputsValue>(initialResState);
 
     const navigation = useNavigation();
     const colorScheme = useColorScheme();
     const { guardarReserva } = useReservas()
-
-    const [inputValues, setInputValues] = useState<ReservaInputsValue>(initialResState);
-    const [date, setDate] = useState(new Date());
 
     const handleSubmit = async () => {
         console.log("POST" + inputValues);
@@ -79,12 +81,12 @@ const AddReservaForm = ({ reserva }: Props) => {
         const { timestamp } = event.nativeEvent;
         let dateD: string
 
-        if (fieldName === 'hora') {
-            dateD = hourToString(new Date(String(timestamp)))
-        } else if (fieldName === 'dia') {
-            dateD = dateToString(new Date(String(timestamp)))
+        if (fieldName === 'hora' && timestamp != undefined) {
+            dateD = hourToString(new Date(timestamp))
+        } else if (fieldName === 'dia' && timestamp != undefined) {
+            dateD = dateToString(new Date(timestamp))
         }
-
+        
         setInputValues((prevInputValues: ReservaInputsValue) => ({
             ...prevInputValues,
             [fieldName]: dateD

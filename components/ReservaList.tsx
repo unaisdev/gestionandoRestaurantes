@@ -5,34 +5,38 @@ import { Reserva } from "../types";
 import ReservaCard from "./ReservaCard";
 import { ReservasContext, useReservas } from "./context/ReservasContext";
 import { View, Text } from "./Themed";
-
-interface Props {
-  selectedDate: Date;
-}
+import { useDateContext } from "./context/DateContext";
 
 // const initial: Reserva[] = [{ "dia": "09/03/2023", "email": "rqwereq", "hora": "werqwerqwe", "id": 40, "mas_info": "", "nombre": "pepep", "personas": 0, "telefono": "" }, { "dia": "09/03/2023", "email": "eqweqwe", "hora": "qweqweqw", "id": 41, "mas_info": "", "nombre": "pepepepepep", "personas": 0, "telefono": "" }, { "dia": "09/03/2023", "email": "wewqeqwe", "hora": "qweqweq", "id": 42, "mas_info": "", "nombre": "alfonso", "personas": 0, "telefono": "" }, { "dia": "09/03/2023", "email": "", "hora": "qwqeqwe", "id": 43, "mas_info": "", "nombre": "qwerqwer", "personas": 0, "telefono": "" }]
 
-const ReservaList = ({ selectedDate }: Props) => {
-  const { reservas, guardarReserva, poblarLista, loadingReservas, eliminarReserva } = useReservas();
-
-  // Formateamos los valores en el formato "dd/mm/yyyy"
-  const selectedDay: string = useMemo<string>((): string => {
-    const day = selectedDate.getDate();
-    const month = selectedDate.getMonth() + 1;
-    const year = selectedDate.getFullYear();
-
-    return `${day.toString().padStart(2, "0")}/${month.toString().padStart(2, "0")}/${year}`;
-
-  }, [selectedDate])
+const ReservaList = () => {
+  const { reservas, poblarArray, loadingReservas, eliminarReserva } = useReservas();
+  const { selectedDay, setSelectedDay } = useDateContext();
+  const [reservasDia, setReservasDia] = useState<Reserva[]>([]);
 
   useEffect(() => {
 
-    poblarLista(selectedDay)
+    poblarArray()
+
+  }, [])
+
+  // Formateamos los valores en el formato "dd/mm/yyyy"
+  const selectedDayString: string = useMemo<string>((): string => {
+    const day = selectedDay.getDate();
+    const month = selectedDay.getMonth() + 1;
+    const year = selectedDay.getFullYear();
+
+    return `${day.toString().padStart(2, "0")}/${month.toString().padStart(2, "0")}/${year}`;
 
   }, [selectedDay])
 
-  console.log({ reservas })
+  useEffect(() => {
+    console.log(reservas);
+    console.log(reservasDia);
 
+    setReservasDia(reservas.filter((item) => item.dia === selectedDayString));
+
+  }, [selectedDay, reservas]);
 
   return (
     <View style={{ display: "flex", flex: 1 }}>
@@ -46,9 +50,8 @@ const ReservaList = ({ selectedDate }: Props) => {
         />
       )}
       <FlatList
-        data={reservas}
+        data={reservasDia}
         renderItem={({ item }) => <ReservaCard reserva={item} />}
-        extraData={reservas}
         keyExtractor={item => String(item.id)}
       />
 

@@ -5,6 +5,7 @@ import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
 import { ReservasContext, ReservasProvider } from './components/context/ReservasContext';
+import { DateProvider } from './components/context/DateContext';
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -15,10 +16,13 @@ export default function App() {
   } else {
     return (
       <SafeAreaProvider>
-        <ReservasProvider>
-          <Navigation colorScheme={colorScheme} />
-          <StatusBar />
-        </ReservasProvider>
+        <DateProvider>
+
+          <ReservasProvider>
+            <Navigation colorScheme={colorScheme} />
+            <StatusBar />
+          </ReservasProvider>
+        </DateProvider>
 
       </SafeAreaProvider>
     );

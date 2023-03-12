@@ -13,6 +13,7 @@ import useColorScheme from '../hooks/useColorScheme';
 import axios from 'axios';
 import { Reserva } from '../types';
 import { useReservas } from './context/ReservasContext';
+import { useDateContext } from './context/DateContext';
 
 
 const { width } = Dimensions.get('window');
@@ -69,12 +70,14 @@ function generateHorizontalCalendarDates(days: number): Date[] {
 function HorizontalCalendar({ selectedDate, setSelectedDate }: Props) {
     const colorScheme = useColorScheme();
     const { reservas } = useReservas();
+    const { selectedDay, setSelectedDay } = useDateContext()
 
     const dates: Date[] = useMemo(() => {
         return generateHorizontalCalendarDates(30);
     }, []);
 
     const onDatePress = (date: Date) => {
+        setSelectedDay(date);
         setSelectedDate(date);
     };
 
