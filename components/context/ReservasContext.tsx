@@ -5,6 +5,7 @@ import axios from "axios";
 import { ReservaInputsValue } from "./types";
 import { useDateContext } from "./DateContext";
 import Toast from 'react-native-root-toast';
+import { formatearDia } from "../../utils/date";
 
 interface ReservasContext {
     reservas: Reserva[];
@@ -35,7 +36,7 @@ export const ReservasProvider = ({ children }: { children: React.ReactNode }) =>
         const month = selectedDateDay.getMonth() + 1;
         const year = selectedDateDay.getFullYear();
     
-        return `${day.toString().padStart(2, "0")}/${month.toString().padStart(2, "0")}/${year}`;
+        return formatearDia(day, month, year);
     
       }, [selectedDay])
 

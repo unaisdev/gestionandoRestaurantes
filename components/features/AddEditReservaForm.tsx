@@ -12,33 +12,10 @@ import { ReservasContext, useReservas } from '../context/ReservasContext';
 import { ReservaInputsValue } from '../context/types';
 import DateTimePicker, { DateTimePickerAndroid, DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useDateContext } from '../context/DateContext';
+import { dateToString, hourToString, stringToDate, stringToHourDate } from '../../utils/date';
 
 type Props = {
     reserva: Reserva;
-}
-
-const dateToString = (date: Date) => {
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-}
-
-const stringToDate = (date: string) => {
-    const [dia, mes, anio] = date.split("/");
-    console.log(new Date(Number(anio), Number(mes) - 1, Number(dia)))
-    return new Date(Number(anio), Number(mes) - 1, Number(dia));
-}
-
-const hourToString = (date: Date) => {
-    return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-}
-
-const stringToHourDate = (hour: string) => {
-    console.log("string to hour", hour)
-
-    const [hours, minutes] = hour.split(':');
-    return new Date(0, 0, 0, parseInt(hours), parseInt(minutes));
 }
 
 
