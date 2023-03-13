@@ -17,7 +17,6 @@ export default function App() {
     return (
       <SafeAreaProvider>
         <DateProvider>
-
           <ReservasProvider>
             <Navigation colorScheme={colorScheme} />
             <StatusBar />

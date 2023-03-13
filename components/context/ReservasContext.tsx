@@ -21,8 +21,6 @@ export const ReservasContext = createContext<ReservasContext>({
     eliminarReserva: () => ({}),
 });
 
-
-
 export const ReservasProvider = ({ children }: { children: React.ReactNode }) => {
     const [reservas, setReservas] = useState<Reserva[]>([])
     const [loadingReservas, setLoadingReservas] = useState(true)
