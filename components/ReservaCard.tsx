@@ -32,7 +32,6 @@ const ReservaCard = ({ reserva }: { reserva: Reserva }) => {
     const deleteReserva = async () => {
         console.log("eliminar reserva: " + { reserva })
         eliminarReserva(reserva)
-
     }
 
     return (

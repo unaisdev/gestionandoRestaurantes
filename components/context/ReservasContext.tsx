@@ -4,6 +4,7 @@ import { View } from "../Themed";
 import axios from "axios";
 import { ReservaInputsValue } from "./types";
 import { useDateContext } from "./DateContext";
+import Toast from 'react-native-root-toast';
 
 interface ReservasContext {
     reservas: Reserva[];
@@ -20,6 +21,8 @@ export const ReservasContext = createContext<ReservasContext>({
     poblarArray: () => ({}),
     eliminarReserva: () => ({}),
 });
+
+let toast
 
 export const ReservasProvider = ({ children }: { children: React.ReactNode }) => {
     const [reservas, setReservas] = useState<Reserva[]>([])
@@ -105,10 +108,13 @@ export const ReservasProvider = ({ children }: { children: React.ReactNode }) =>
                     },
                 }
             );
-
+            
             setReservas(response.data)
             setLoadingReservas(false)
-
+            toast = Toast.show(`Cargadas ${response.data.length} reservas.`, {
+                duration: Toast.durations.SHORT,
+                position: Toast.positions.CENTER
+              });
         } catch (error) {
             console.error(error);
         }

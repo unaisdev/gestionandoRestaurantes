@@ -6,6 +6,7 @@ import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
 import { ReservasContext, ReservasProvider } from './components/context/ReservasContext';
 import { DateProvider } from './components/context/DateContext';
+import { RootSiblingParent } from 'react-native-root-siblings';
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -16,13 +17,14 @@ export default function App() {
   } else {
     return (
       <SafeAreaProvider>
-        <DateProvider>
-          <ReservasProvider>
-            <Navigation colorScheme={colorScheme} />
-            <StatusBar />
-          </ReservasProvider>
-        </DateProvider>
-
+        <RootSiblingParent>
+          <DateProvider>
+            <ReservasProvider>
+              <Navigation colorScheme={colorScheme} />
+              <StatusBar />
+            </ReservasProvider>
+          </DateProvider>
+        </RootSiblingParent>
       </SafeAreaProvider>
     );
   }

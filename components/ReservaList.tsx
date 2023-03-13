@@ -40,7 +40,7 @@ const ReservaList = () => {
 
   return (
     <View style={{ display: "flex", flex: 1 }}>
-      {loadingReservas && (
+      {loadingReservas ? (
         <ActivityIndicator
           size="large"
           style={{
@@ -48,12 +48,13 @@ const ReservaList = () => {
             marginTop: 30,
           }}
         />
-      )}
-      <FlatList
-        data={reservasDia}
-        renderItem={({ item }) => <ReservaCard reserva={item} />}
-        keyExtractor={item => String(item.id)}
-      />
+      ): reservasDia.length !== 0 ? (
+        <FlatList
+          data={reservasDia}
+          renderItem={({ item }) => <ReservaCard reserva={item} />}
+          keyExtractor={item => String(item.id)}
+        />
+      ) : <Text>NO HAY RESERVAS PARA ESTE DIA</Text> }
 
     </View>
 
