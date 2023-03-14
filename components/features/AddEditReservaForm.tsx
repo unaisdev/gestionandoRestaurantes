@@ -18,6 +18,98 @@ type Props = {
     reserva: Reserva;
 }
 
+interface DateProps {
+    onReservaChange: (reserva: ReservaInputsValue) => void;
+    reserva: ReservaInputsValue;
+}
+
+const DateSelector = ({ reserva, onReservaChange }: DateProps) => {
+    const [show, setShow] = useState(false);
+
+    const onChange = (event: DateTimePickerEvent, selectedDate: Date) => {
+        const currentDate = selectedDate || reserva.dia;
+        setShow(Platform.OS === 'ios');
+        onReservaChange({ ...reserva, dia: dateToString(currentDate) });
+    };
+
+    const showDatePicker = () => {
+        setShow(true);
+    };
+
+    return (
+        <View>
+            {Platform.OS === 'ios' ? (
+                <>
+                    <DateTimePicker
+                        value={stringToDate(reserva.dia)}
+                        mode="date"
+                        display="default"
+                        onChange={onChange}
+                    />
+                </>
+            ) : (
+                <>
+                    <Button onPress={showDatePicker} title="Select Date" />
+
+                    {show && (
+                        <DateTimePicker
+                            value={stringToDate(reserva.dia)}
+                            mode="date"
+                            display="default"
+                            onChange={onChange}
+                        />
+                    )}
+                </>
+            )}
+
+        </View>
+    );
+};
+
+const TimeSelector = ({ reserva, onReservaChange }: DateProps) => {
+    const [show, setShow] = useState(false);
+
+    const onChange = (event: DateTimePickerEvent, selectedTime: Date) => {
+        const currentTime = selectedTime || reserva.hora;
+        setShow(Platform.OS === 'ios');
+        onReservaChange({ ...reserva, hora: hourToString(currentTime) });
+    };
+
+    const showTimePicker = () => {
+        setShow(true);
+    };
+
+    return (
+        <View>
+            {Platform.OS === 'ios' ? (
+                <>
+                    <DateTimePicker
+                        value={stringToHourDate(reserva.hora)}
+                        mode="time"
+                        display="default"
+                        onChange={onChange}
+                    />
+                </>
+            ) : (
+                <>
+                    <Button onPress={showTimePicker} title="Select Time" />
+
+                    {show && (
+                        <DateTimePicker
+                            value={stringToHourDate(reserva.hora)}
+                            mode="time"
+                            display="default"
+                            onChange={onChange}
+                        />
+                    )}
+                </>
+            )}
+
+
+
+        </View>
+    );
+};
 
 const AddReservaForm = ({ reserva }: Props) => {
     const [date, setDate] = useState(new Date());
@@ -32,7 +124,7 @@ const AddReservaForm = ({ reserva }: Props) => {
         email: reserva.email || '',
         mas_info: reserva.mas_info || '',
     }
-    
+
     const [inputValues, setInputValues] = useState<ReservaInputsValue>(initialResState);
 
     const navigation = useNavigation();
@@ -54,21 +146,9 @@ const AddReservaForm = ({ reserva }: Props) => {
         }));
     };
 
-    const handleDateTimeChange = (event: DateTimePickerEvent, fieldName: keyof Reserva) => {
-        const { timestamp } = event.nativeEvent;
-        let dateD: string
-
-        if (fieldName === 'hora' && timestamp != undefined) {
-            dateD = hourToString(new Date(timestamp))
-        } else if (fieldName === 'dia' && timestamp != undefined) {
-            dateD = dateToString(new Date(timestamp))
-        }
-        
-        setInputValues((prevInputValues: ReservaInputsValue) => ({
-            ...prevInputValues,
-            [fieldName]: dateD
-        }));
-    }
+    const handleReservaDateChange = (reserva: ReservaInputsValue) => {
+        setInputValues(reserva);
+    };
 
     return (
         <Formik
@@ -85,20 +165,9 @@ const AddReservaForm = ({ reserva }: Props) => {
                     value={inputValues.nombre} />
 
                 <View className='flex flex-row justify-around p-3'>
-                    <DateTimePicker
-                        testID="dateTimePicker"
-                        value={stringToDate(inputValues.dia)}
-                        mode='date'
-                        onChange={(event) => handleDateTimeChange(event, 'dia')}
-                    />
 
-                    <DateTimePicker
-                        testID="dateTimePicker"
-                        value={stringToHourDate(inputValues.hora)}
-                        mode='time'
-                        is24Hour={true}
-                        onChange={(event) => handleDateTimeChange(event, 'hora')}
-                    />
+                    <DateSelector reserva={inputValues} onReservaChange={handleReservaDateChange} />
+                    <TimeSelector reserva={inputValues} onReservaChange={handleReservaDateChange} />
 
                 </View>
 

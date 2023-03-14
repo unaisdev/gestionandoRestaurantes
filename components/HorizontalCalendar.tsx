@@ -14,6 +14,7 @@ import axios from 'axios';
 import { Reserva } from '../types';
 import { useReservas } from './context/ReservasContext';
 import { useDateContext } from './context/DateContext';
+import { getDateMonth, getMonthNumber, translateWeekDay } from '../utils/date';
 
 
 const { width } = Dimensions.get('window');
@@ -81,29 +82,11 @@ function HorizontalCalendar({ selectedDate, setSelectedDate }: Props) {
         setSelectedDate(date);
     };
 
-    const translateDate = (str: string) => {
-        switch (str) {
-            case "Mon":
-                return "Lun";
-            case "Tue":
-                return "Mar";
-            case "Wed":
-                return "Mier";
-            case "Thu":
-                return "Jue";
-            case "Fri":
-                return "Vie";
-            case "Sat":
-                return "Sáb";
-            case "Sun":
-                return "Dom";
-        }
-    }
-
     const renderItem = ({ item, index }: { item: Date; index: number }) => {
+        let lastMonthName = ""
         const monthName = item.getMonth();
         const dayNumber = item.getDate();
-        const dayString = translateDate(getDayString(item));
+        const dayString = translateWeekDay(getDayString(item));
 
         const isActive = isSameDay(selectedDate, item);
 
@@ -120,18 +103,6 @@ function HorizontalCalendar({ selectedDate, setSelectedDate }: Props) {
             </Pressable>
         );
     };
-
-    const getDateMonth = () => {
-        const month = new Intl.DateTimeFormat('es', { month: 'long' }).format(selectedDate)
-
-        return month.charAt(0).toUpperCase() + month.slice(1);
-    }
-
-    const getMonthNumber = () => {
-        const options: Intl.DateTimeFormatOptions = { month: '2-digit' };
-        const mesConCero = selectedDate.toLocaleString('es', options);
-        return mesConCero; // "03"
-    }
 
 
 
@@ -167,8 +138,8 @@ function HorizontalCalendar({ selectedDate, setSelectedDate }: Props) {
                 style={{
                     backgroundColor: Colors[colorScheme].backgroundCalendar,
                 }}>
-                <Text className='px-3'>{getDateMonth()}</Text>
-                <Text className='px-1'>{getMonthNumber()}</Text>
+                <Text className='px-3'>{getDateMonth(selectedDate)}</Text>
+                <Text className='px-1'>{getMonthNumber(selectedDate)}</Text>
                 <Text className='px-1'>/</Text>
                 <Text className='px-1'>{selectedDate.getFullYear()}</Text>
             </View>
