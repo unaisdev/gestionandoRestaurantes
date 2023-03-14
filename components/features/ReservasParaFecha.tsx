@@ -20,7 +20,7 @@ const ReservasParaFecha = () => {
             <HorizontalCalendar
                 selectedDate={selectedDate}
                 setSelectedDate={setSelectedDate} />
-            <ReservaList selectedDate={selectedDate}/>
+            <ReservaList />
         </View>
     )
 }

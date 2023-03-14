@@ -26,8 +26,13 @@ interface DateProps {
 const DateSelector = ({ reserva, onReservaChange }: DateProps) => {
     const [show, setShow] = useState(false);
 
-    const onChange = (event: DateTimePickerEvent, selectedDate: Date) => {
-        const currentDate = selectedDate || reserva.dia;
+    const onChange = (event: DateTimePickerEvent, selectedDate: Date | undefined) => {
+        let currentDate
+        if (selectedDate === undefined)
+            currentDate = stringToDate(reserva.dia);
+        else
+            currentDate = selectedDate
+
         setShow(Platform.OS === 'ios');
         onReservaChange({ ...reserva, dia: dateToString(currentDate) });
     };
@@ -49,7 +54,7 @@ const DateSelector = ({ reserva, onReservaChange }: DateProps) => {
                 </>
             ) : (
                 <>
-                    <Button onPress={showDatePicker} title="Select Date" />
+                    <Button onPress={showDatePicker} title={`${reserva.dia}`} />
 
                     {show && (
                         <DateTimePicker
@@ -69,8 +74,12 @@ const DateSelector = ({ reserva, onReservaChange }: DateProps) => {
 const TimeSelector = ({ reserva, onReservaChange }: DateProps) => {
     const [show, setShow] = useState(false);
 
-    const onChange = (event: DateTimePickerEvent, selectedTime: Date) => {
-        const currentTime = selectedTime || reserva.hora;
+    const onChange = (event: DateTimePickerEvent, selectedTime: Date | undefined) => {
+        let currentTime
+        if (selectedTime === undefined)
+            currentTime = stringToDate(reserva.hora);
+        else
+            currentTime = selectedTime
         setShow(Platform.OS === 'ios');
         onReservaChange({ ...reserva, hora: hourToString(currentTime) });
     };
@@ -92,7 +101,7 @@ const TimeSelector = ({ reserva, onReservaChange }: DateProps) => {
                 </>
             ) : (
                 <>
-                    <Button onPress={showTimePicker} title="Select Time" />
+                    <Button onPress={showTimePicker} title={`${reserva.hora}`} />
 
                     {show && (
                         <DateTimePicker
