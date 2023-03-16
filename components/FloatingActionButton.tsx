@@ -36,7 +36,7 @@ const FloatingActionButton = () => {
                 onPressIn={handlePressIn}
                 onPressOut={handlePressOut}
                 >
-                <AntDesign name="adduser" size={32} color="white" />
+                <AntDesign name="adduser" size={24} color="white" />
             </Pressable>
         </>
     )
@@ -44,12 +44,12 @@ const FloatingActionButton = () => {
 
 const styles = StyleSheet.create({
     button: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
+        width: 46,
+        height: 46,
+        borderRadius: 10,
         position: 'absolute',
-        bottom: 45,
-        right: 30,
+        bottom: -15,
+        right: 20   ,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useEffect, useContext, useMemo } from "react";
-import { ActivityIndicator, FlatList } from "react-native";
+import { ActivityIndicator, FlatList, RefreshControl, SafeAreaView, ScrollView, StyleSheet } from "react-native";
 import { Reserva } from "../types";
 import ReservaCard from "./ReservaCard";
 import { ReservasContext, useReservas } from "./context/ReservasContext";
@@ -14,6 +14,7 @@ const ReservaList = () => {
   const { reservas, poblarArray, loadingReservas, eliminarReserva } = useReservas();
   const { selectedDay, setSelectedDay } = useDateContext();
   const [reservasDia, setReservasDia] = useState<Reserva[]>([]);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 
   useEffect(() => {
 
@@ -32,34 +33,56 @@ const ReservaList = () => {
   }, [selectedDay])
 
   useEffect(() => {
-    console.log(reservas);
-    console.log(reservasDia);
 
     setReservasDia(reservas.filter((item) => item.dia === selectedDayString));
+    console.log(reservasDia);
 
   }, [selectedDayString, reservas]);
 
   return (
-    <View style={{ display: "flex", flex: 1 }}>
-      {loadingReservas ? (
-        <ActivityIndicator
-          size="large"
-          style={{
-            marginBottom: 30,
-            marginTop: 30,
-          }}
-        />
-      ): reservasDia.length !== 0 ? (
-        <FlatList
-          data={reservasDia}
-          renderItem={({ item }) => <ReservaCard reserva={item} />}
-          keyExtractor={item => String(item.id)}
-        />
-      ) : <Text>NO HAY RESERVAS PARA ESTE DIA</Text> }
+    <View style={{ display: "flex", flex: 1, zIndex: -1 }}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => {
+              setRefreshing(true);
+              poblarArray()
+              setRefreshing(false);
+            }} />
+        }
+      >
+        {loadingReservas ? (
+          <ActivityIndicator
+            size="large"
+            style={{
+              marginBottom: 30,
+              marginTop: 30,
+            }}
+          />
+        ) : reservasDia.length !== 0 ? (
+          <SafeAreaView>
+            <FlatList
+              style={styles.flatList}
+              data={reservasDia}
+              renderItem={({ item }) => <ReservaCard reserva={item} />}
+              keyExtractor={item => String(item.id)}
+            />
+          </SafeAreaView>
+
+        ) : <Text>NO HAY RESERVAS PARA ESTE DIA</Text>}
+      </ScrollView>
+
 
     </View>
 
   )
 }
+
+const styles = StyleSheet.create({
+  flatList: {
+     marginBottom: 30,
+  }
+})
 
 export default ReservaList;

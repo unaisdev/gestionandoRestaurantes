@@ -1,6 +1,5 @@
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
-import { Alert, GestureResponderEvent, Pressable, StyleSheet, } from "react-native";
-import { Text, View } from '../components/Themed';
+import { Alert, GestureResponderEvent, Pressable, StyleSheet, Text, View } from "react-native";
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -35,7 +34,14 @@ const ReservaCard = ({ reserva }: { reserva: Reserva }) => {
     }
 
     return (
-        <View className="flex flex-row mx-4 items-center justify-between">
+        <Pressable
+            className="flex flex-row mx-2 my-2 px-6 items-center justify-between"
+            style={styles.card}
+            onPress={() => { 
+                const isEditing = true
+                navigation.navigate('AddReserva', { reserva, isEditing }) 
+            }}>
+
             <View className="basis-2/5">
                 <Text style={styles.nombre} className="flex first-letter:uppercase text-center font-bold">{reserva.nombre}</Text>
                 <Text style={styles.personas} className="flex text-center">{reserva.personas} pers.</Text>
@@ -46,27 +52,15 @@ const ReservaCard = ({ reserva }: { reserva: Reserva }) => {
                 <Text style={styles.hora} className="flex text-center">{reserva.hora}</Text>
             </View>
 
-            <View className='flex flex-col justify-center'>
                 <Pressable
-                    className='p-3'
+                    className='p-2 mb-4 bg-red-500'
                     onPress={wannaDelete}
-                    style={({ pressed }) => ({
-                        opacity: pressed ? 0.5 : 1,
-                    })}>
-
-                    <FontAwesome name="remove" size={14} color={Colors[colorScheme].text} />
+                    style={[styles.eliminarButton]}>
+                    <FontAwesome name="remove" size={12} color={Colors[colorScheme].text} />
                 </Pressable>
-                <Pressable
-                    className='p-3'
-                    onPress={() => { navigation.navigate('AddReserva', { reserva }) }}
-                    style={({ pressed }) => ({
-                        opacity: pressed ? 0.5 : 1,
-                    })}>
-                    <AntDesign name="edit" size={14} color={Colors[colorScheme].text} />
-                </Pressable>
-            </View>
 
-        </View>
+
+        </Pressable>
     )
 }
 
@@ -76,7 +70,18 @@ const styles = StyleSheet.create({
         height: 1,
         width: '80%',
     },
-
+    card: {
+        borderRadius: 20,
+        borderWidth: 1,
+        borderTopWidth: 0,
+        borderLeftWidth: 0,
+        borderRightWidth: 0,
+        borderColor: 'LavenderBlush',
+        padding: 10,
+    },
+    eliminarButton: {
+        borderRadius: 10,
+    },
     row: {
 
     },
@@ -85,7 +90,7 @@ const styles = StyleSheet.create({
     },
 
     personas: {
-        fontSize: 20,
+        fontSize: 14,
     },
 
     dia: {

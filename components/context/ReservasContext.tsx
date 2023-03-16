@@ -13,6 +13,7 @@ interface ReservasContext {
     guardarReserva: (inputValues: ReservaInputsValue) => void;
     poblarArray: () => void;
     eliminarReserva: (reserva: Reserva) => void;
+    actualizarReserva: (reserva: Reserva) => void;
 }
 
 export const ReservasContext = createContext<ReservasContext>({
@@ -21,6 +22,7 @@ export const ReservasContext = createContext<ReservasContext>({
     guardarReserva: () => ({}),
     poblarArray: () => ({}),
     eliminarReserva: () => ({}),
+    actualizarReserva: () => ({}),
 });
 
 let toast
@@ -40,6 +42,38 @@ export const ReservasProvider = ({ children }: { children: React.ReactNode }) =>
     
       }, [selectedDay])
 
+    const actualizarReserva = async (reserva: Reserva) => {
+        console.log("actualizando reserva: " + JSON.stringify(reserva));
+        try {
+            const response = await fetch('http://192.168.1.133:3000/api/reservar', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(reserva),
+            });
+            const reservaAct: Reserva = await response.json();
+            
+            console.log(response.json())
+            setReservas(previus => {
+                // Buscar y actualizar la reserva existente en la matriz
+                const nuevasReservas = previus.map(previa => {
+                    if (previa.id === reservaAct.id) {
+                        return reservaAct;
+                    }
+                    return previa;
+                });
+                console.log(nuevasReservas)
+
+                return nuevasReservas;
+            });
+            
+        } catch (error) {
+            console.error(error);
+        }
+        // setReservas(reservas)
+
+    }
 
     const guardarReserva = async (inputValues: ReservaInputsValue) => {
         // reservas?.push(reserva)        
@@ -109,7 +143,8 @@ export const ReservasProvider = ({ children }: { children: React.ReactNode }) =>
                     },
                 }
             );
-            
+            console.log(response.data)
+
             setReservas(response.data)
             setLoadingReservas(false)
             toast = Toast.show(`Cargadas ${response.data.length} reservas.`, {
@@ -122,7 +157,7 @@ export const ReservasProvider = ({ children }: { children: React.ReactNode }) =>
 
     }
 
-    const values = { reservas, selectedDateDay, loadingReservas, guardarReserva, poblarArray, eliminarReserva };
+    const values = { reservas, selectedDateDay, loadingReservas, guardarReserva, poblarArray, eliminarReserva, actualizarReserva };
 
     return (
         <ReservasContext.Provider value={values}>
@@ -133,7 +168,7 @@ export const ReservasProvider = ({ children }: { children: React.ReactNode }) =>
 
 
 export const useReservas = () => {
-    const { reservas, loadingReservas, guardarReserva, poblarArray, eliminarReserva } = useContext(ReservasContext)
+    const { reservas, loadingReservas, guardarReserva, poblarArray, eliminarReserva, actualizarReserva } = useContext(ReservasContext)
 
-    return { reservas, loadingReservas, guardarReserva, poblarArray, eliminarReserva }
+    return { reservas, loadingReservas, guardarReserva, poblarArray, eliminarReserva, actualizarReserva }
 }

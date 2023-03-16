@@ -85,6 +85,7 @@ function BottomTabNavigator() {
         },
         tabBarStyle: {
           position: "absolute",
+          width: "70%",
           bottom: 10,
           left: 20,
           right: 20,

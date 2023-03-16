@@ -45,3 +45,8 @@ export interface Reserva {
   email: string;
   mas_info?: string;
 }
+
+export interface User {
+  id: number;
+  token_push_notification: string;
+}

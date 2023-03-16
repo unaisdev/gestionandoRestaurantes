@@ -25,30 +25,20 @@ const AddReservaScreen = () => {
         mas_info: '',
         personas: 0,
     };
+    const isEditing = params && 'isEditing' in params ? (params.isEditing as Boolean) : undefined;
+
+    // const isEditing = params && 'isEditing' in params
     // const reserva: Reserva = route.params;
 
     return (
-        <View>
-            <AddReservaForm reserva={reserva} />
+        <View className='flex-auto'>
+            <AddReservaForm reserva={reserva} isEditing={isEditing} />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
-    separator: {
-        marginVertical: 30,
-        height: 1,
-        width: '80%',
-    },
+
 });
 
 export default AddReservaScreen;
