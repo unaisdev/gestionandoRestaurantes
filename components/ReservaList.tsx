@@ -41,37 +41,47 @@ const ReservaList = () => {
 
   return (
     <View style={{ display: "flex", flex: 1, zIndex: -1 }}>
-      <ScrollView
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={() => {
-              setRefreshing(true);
-              poblarArray()
-              setRefreshing(false);
-            }} />
-        }
-      >
-        {loadingReservas ? (
-          <ActivityIndicator
-            size="large"
-            style={{
-              marginBottom: 30,
-              marginTop: 30,
-            }}
+      {loadingReservas ? (
+        <ActivityIndicator
+          size="large"
+          style={{
+            marginBottom: 30,
+            marginTop: 30,
+          }}
+        />
+      ) : reservasDia.length !== 0 ? (
+        <SafeAreaView>
+          <FlatList
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={() => {
+                  setRefreshing(true);
+                  poblarArray()
+                  setRefreshing(false);
+                }} />
+            }
+            style={styles.flatList}
+            data={reservasDia}
+            renderItem={({ item }) => <ReservaCard reserva={item} />}
+            keyExtractor={item => String(item.id)}
           />
-        ) : reservasDia.length !== 0 ? (
-          <SafeAreaView>
-            <FlatList
-              style={styles.flatList}
-              data={reservasDia}
-              renderItem={({ item }) => <ReservaCard reserva={item} />}
-              keyExtractor={item => String(item.id)}
-            />
-          </SafeAreaView>
+        </SafeAreaView>
 
-        ) : <Text>NO HAY RESERVAS PARA ESTE DIA</Text>}
-      </ScrollView>
+      ) : <ScrollView
+            style={{ flex: 1 }}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={() => {
+                  setRefreshing(true);
+                  poblarArray()
+                  setRefreshing(false);
+                }} />
+            }
+        >
+        <Text>NO HAY RESERVAS PARA ESTE DIA</Text>
+      </ScrollView>}
 
 
     </View>
@@ -81,7 +91,7 @@ const ReservaList = () => {
 
 const styles = StyleSheet.create({
   flatList: {
-     marginBottom: 30,
+    marginBottom: 30,
   }
 })
 
