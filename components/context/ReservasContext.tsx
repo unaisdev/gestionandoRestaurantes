@@ -27,6 +27,19 @@ export const ReservasContext = createContext<ReservasContext>({
 
 let toast
 
+const toJsonInputs = (data: ReservaInputsValue): string => {
+    const json = `{
+      "nombre": "${data.nombre}",
+      "telefono": "${data.telefono}",
+      "personas": ${data.personas},
+      "dia": "${data.dia}",
+      "hora": "${data.hora}",
+      "email": "${data.email}",
+      "mas_info": "${(data.mas_info || '').replace(/\n/g, '\\u000A')}"
+    }`;
+    return json;
+};
+
 export const ReservasProvider = ({ children }: { children: React.ReactNode }) => {
     const [reservas, setReservas] = useState<Reserva[]>([])
     const [loadingReservas, setLoadingReservas] = useState(true)
@@ -37,10 +50,10 @@ export const ReservasProvider = ({ children }: { children: React.ReactNode }) =>
         const day = selectedDateDay.getDate();
         const month = selectedDateDay.getMonth() + 1;
         const year = selectedDateDay.getFullYear();
-    
+
         return formatearDia(day, month, year);
-    
-      }, [selectedDay])
+
+    }, [selectedDay])
 
     const actualizarReserva = async (reserva: Reserva) => {
         console.log("actualizando reserva: " + JSON.stringify(reserva));
@@ -53,7 +66,7 @@ export const ReservasProvider = ({ children }: { children: React.ReactNode }) =>
                 body: JSON.stringify(reserva),
             });
             const reservaAct: Reserva = await response.json();
-            
+
             console.log(response.json())
             setReservas(previus => {
                 // Buscar y actualizar la reserva existente en la matriz
@@ -67,7 +80,7 @@ export const ReservasProvider = ({ children }: { children: React.ReactNode }) =>
 
                 return nuevasReservas;
             });
-            
+
         } catch (error) {
             console.error(error);
         }
@@ -77,35 +90,37 @@ export const ReservasProvider = ({ children }: { children: React.ReactNode }) =>
 
     const guardarReserva = async (inputValues: ReservaInputsValue) => {
         // reservas?.push(reserva)        
+        console.log(toJsonInputs(inputValues));
+
         try {
             const response = await fetch('http://192.168.1.133:3000/api/reservar', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(inputValues),
+                body: toJsonInputs(inputValues),
             });
             const newReserva: Reserva = await response.json();
-            
+
             setReservas((previus) => {
                 return [...previus, newReserva]
             })
-            
+
         } catch (error) {
             console.error(error);
         }
         // setReservas(reservas)
 
-        
+
     }
 
     const eliminarReserva = async (reserva: Reserva) => {
         console.log("eliminar:; " + JSON.stringify(reserva));
-        
+
         try {
             const responseAxios = await axios.delete(
                 "http://192.168.1.133:3000/api/reservar",
-                {   
+                {
                     params: {
                         key: "holaquetalestamos",
                         id: reserva.id,
@@ -114,7 +129,7 @@ export const ReservasProvider = ({ children }: { children: React.ReactNode }) =>
                 }
             );
 
-             setReservas(reservas.filter(item => item !== reserva))
+            setReservas(reservas.filter(item => item !== reserva))
 
             // const response = await fetch('http://192.168.1.133:3000/api/reservar', {
             //     method: 'DELETE',
@@ -150,7 +165,7 @@ export const ReservasProvider = ({ children }: { children: React.ReactNode }) =>
             toast = Toast.show(`Cargadas ${response.data.length} reservas.`, {
                 duration: Toast.durations.SHORT,
                 position: Toast.positions.CENTER
-              });
+            });
         } catch (error) {
             console.error(error);
         }

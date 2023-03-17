@@ -53,7 +53,7 @@ const ReservaCard = ({ reserva }: { reserva: Reserva }) => {
             </View>
 
                 <Pressable
-                    className='p-2 mb-4 bg-red-500'
+                    className='p-1 mb-4 bg-red-500'
                     onPress={wannaDelete}
                     style={[styles.eliminarButton]}>
                     <FontAwesome name="remove" size={12} color={Colors[colorScheme].text} />
