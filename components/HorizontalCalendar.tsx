@@ -14,17 +14,38 @@ import axios from 'axios';
 import { Reserva } from '../types';
 import { useReservas } from './context/ReservasContext';
 import { useDateContext } from './context/DateContext';
-import { getDateMonth, getMonthNumber, translateWeekDay } from '../utils/date';
+import { compareFestivityDay, getDateMonth, getMonthNumber, translateWeekDay } from '../utils/date';
 
 
 const { width } = Dimensions.get('window');
 const ITEM_WIDTH = width * 0.12;
 const ITEM_HEIGHT = 60;
 const ITEM_OFFSET = ITEM_WIDTH + 18;
+
+interface Festivity {
+    date: Date;
+    name: string;
+    isHoliday: boolean;
+    city?: string;
+}
+
 interface Props {
     selectedDate: Date;
     setSelectedDate: (date: Date) => void;
 }
+
+const festivityArray: Festivity[] = [
+    {
+        date: new Date(2023, 2, 30),
+        name: 'Epifanía del Señor',
+        isHoliday: true,
+    },
+    {
+        date: new Date(2023, 3, 2),
+        name: 'aaa',
+        isHoliday: true,
+    },
+]
 
 function dateSubtractDays(date: Date, days: number) {
     var result = new Date(date);
@@ -83,7 +104,13 @@ function HorizontalCalendar({ selectedDate, setSelectedDate }: Props) {
     };
 
     const renderItem = ({ item, index }: { item: Date; index: number }) => {
-        let lastMonthName = ""
+        let isFestivity
+
+        festivityArray.map((festivity) => {
+            isFestivity = compareFestivityDay(festivity.date, item) ? true : false
+            
+        })
+
         const monthName = item.getMonth();
         const dayNumber = item.getDate();
         const dayString = translateWeekDay(getDayString(item));
@@ -93,11 +120,31 @@ function HorizontalCalendar({ selectedDate, setSelectedDate }: Props) {
         return (
             <Pressable
                 onPress={() => onDatePress(item)}
-                style={[styles.item, isActive && { backgroundColor: Colors[colorScheme].backgroundDay }]}>
-                <Text style={isToday(item) ? styles.todayNumber : [styles.dateOutput, isActive && styles.activeText]}>
+                style={[
+                    styles.item,
+                    isActive && {
+                        backgroundColor: Colors[colorScheme].backgroundDay
+                    }]}>
+                <Text style={isToday(item) ? styles.todayNumber : [
+                    styles.dateOutput,
+                    dayString === "Lun" ? styles.freeDay : null,
+                    dayString === "Vie" ? styles.friday : null,
+                    dayString === "Sáb" ? styles.weekEnd : null,
+                    dayString === "Dom" ? styles.weekEnd : null,
+                    isFestivity ? styles.festivity : null,
+                    isActive && styles.activeText
+                ]}>
                     {dayNumber}
                 </Text>
-                <Text style={isToday(item) ? styles.todayText : [styles.dayStyle, isActive && styles.activeText]}>
+                <Text style={isToday(item) ? styles.todayText : [
+                    styles.dayStyle,
+                    dayString === "Lun" ? styles.freeDay : null,
+                    dayString === "Vie" ? styles.friday : null,
+                    dayString === "Sáb" ? styles.weekEnd : null,
+                    dayString === "Dom" ? styles.weekEnd : null,
+                    isFestivity ? styles.festivity : null,
+                    isActive && styles.activeText
+                ]}>
                     {isToday(item) ? 'Hoy' : dayString}
                 </Text>
             </Pressable>
@@ -203,6 +250,18 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         fontStyle: 'italic',
         fontSize: 18
+    },
+    weekEnd: {
+        color: 'brown'
+    },
+    friday: {
+        color: 'orange'
+    },
+    freeDay: {
+        color: 'grey'
+    },
+    festivity: {
+        color: 'purple'
     }
 });
 
