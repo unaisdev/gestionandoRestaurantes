@@ -5,24 +5,29 @@ export default {
   light: {
     text: '#000',
     background: '#fff',
-    backgroundDay: '#DAAA00',
+    backgroundActiveDay: '#DAAA00',
     backgroundCalendar: '#9C8412',
     tint: tintColorLight,
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorLight,
     borderColor: '#ccc',
     inputPlaceHolders: '#ccc',
+    dayNumber: '#ccc',
+    dayString: '#ccc',
+
   },
   dark: {
     text: '#fff',
     background: '#000',
-    backgroundDay: '#fff',
-    backgroundCalendar: '#2596be',
+    backgroundActiveDay: '#D4D4D4',
+    backgroundCalendar: '#838383',
     tint: tintColorDark,
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorDark,
     borderColor: '#000',
     inputPlaceHolders: '#ccc',
-
+    dayNumber: '#ccc',
+    dayNumberSelected: '#000',
+    dayString: '#000',
   },
 };

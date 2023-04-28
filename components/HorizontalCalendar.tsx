@@ -1,3 +1,5 @@
+/// <reference types="nativewind/types" />
+
 import React, { useEffect, useMemo } from 'react';
 import {
     FlatList,
@@ -10,11 +12,11 @@ import { Text, View } from './Themed';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
-import axios from 'axios';
 import { Reserva } from '../types';
-import { useReservas } from './context/ReservasContext';
+import { useReservasContext } from './context/ReservasContext';
 import { useDateContext } from './context/DateContext';
 import { compareFestivityDay, getDateMonth, getMonthNumber, translateWeekDay } from '../utils/date';
+import Animated, { SlideInDown, SlideInRight, SlideInUp } from 'react-native-reanimated';
 
 
 const { width } = Dimensions.get('window');
@@ -27,11 +29,6 @@ interface Festivity {
     name: string;
     isHoliday: boolean;
     city?: string;
-}
-
-interface Props {
-    selectedDate: Date;
-    setSelectedDate: (date: Date) => void;
 }
 
 const festivityArray: Festivity[] = [
@@ -89,9 +86,9 @@ function generateHorizontalCalendarDates(days: number): Date[] {
 }
 
 
-function HorizontalCalendar({ selectedDate, setSelectedDate }: Props) {
+function HorizontalCalendar() {
     const colorScheme = useColorScheme();
-    const { reservas } = useReservas();
+    const { reservas } = useReservasContext();
     const { selectedDay, setSelectedDay } = useDateContext()
 
     const dates: Date[] = useMemo(() => {
@@ -100,7 +97,6 @@ function HorizontalCalendar({ selectedDate, setSelectedDate }: Props) {
 
     const onDatePress = (date: Date) => {
         setSelectedDay(date);
-        setSelectedDate(date);
     };
 
     const renderItem = ({ item, index }: { item: Date; index: number }) => {
@@ -108,46 +104,59 @@ function HorizontalCalendar({ selectedDate, setSelectedDate }: Props) {
 
         festivityArray.map((festivity) => {
             isFestivity = compareFestivityDay(festivity.date, item) ? true : false
-            
+
         })
 
         const monthName = item.getMonth();
         const dayNumber = item.getDate();
         const dayString = translateWeekDay(getDayString(item));
 
-        const isActive = isSameDay(selectedDate, item);
+        const isActive = isSameDay(selectedDay, item);
 
         return (
-            <Pressable
-                onPress={() => onDatePress(item)}
-                style={[
-                    styles.item,
-                    isActive && {
-                        backgroundColor: Colors[colorScheme].backgroundDay
-                    }]}>
-                <Text style={isToday(item) ? styles.todayNumber : [
-                    styles.dateOutput,
-                    dayString === "Lun" ? styles.freeDay : null,
-                    dayString === "Vie" ? styles.friday : null,
-                    dayString === "Sáb" ? styles.weekEnd : null,
-                    dayString === "Dom" ? styles.weekEnd : null,
-                    isFestivity ? styles.festivity : null,
-                    isActive && styles.activeText
-                ]}>
-                    {dayNumber}
-                </Text>
-                <Text style={isToday(item) ? styles.todayText : [
-                    styles.dayStyle,
-                    dayString === "Lun" ? styles.freeDay : null,
-                    dayString === "Vie" ? styles.friday : null,
-                    dayString === "Sáb" ? styles.weekEnd : null,
-                    dayString === "Dom" ? styles.weekEnd : null,
-                    isFestivity ? styles.festivity : null,
-                    isActive && styles.activeText
-                ]}>
-                    {isToday(item) ? 'Hoy' : dayString}
-                </Text>
-            </Pressable>
+            <Animated.View
+                entering={SlideInDown.duration(3000)}>
+
+                <Pressable
+                    onPress={() => onDatePress(item)}
+                    style={[
+                        styles.item,
+                        isActive && {
+                            backgroundColor: Colors[colorScheme].backgroundActiveDay
+                        }]}>
+                    <Text style={
+                        isToday(item) ? styles.todayNumber :
+                            [
+                                styles.dateOutput,
+                                {
+                                    color: Colors[colorScheme].dayNumber
+                                },
+                                // dayString === "Lun" ? styles.freeDay : null,
+                                // dayString === "Vie" ? styles.friday : null,
+                                // dayString === "Sáb" ? styles.weekEnd : null,
+                                // dayString === "Dom" ? styles.weekEnd : null,
+                                isFestivity ? styles.festivity : null,
+                                isActive && styles.activeText
+                            ]}>
+                        {dayNumber}
+                    </Text>
+                    <Text style={isToday(item) ? styles.todayText : [
+                        styles.dayStyle,
+                        {
+                            color: Colors[colorScheme].dayString
+                        },
+                        // dayString === "Lun" ? styles.freeDay : null,
+                        // dayString === "Vie" ? styles.friday : null,
+                        // dayString === "Sáb" ? styles.weekEnd : null,
+                        // dayString === "Dom" ? styles.weekEnd : null,
+                        isFestivity ? styles.festivity : null,
+                        isActive && styles.activeText
+                    ]}>
+                        {isToday(item) ? 'Hoy' : dayString}
+                    </Text>
+                </Pressable>
+            </Animated.View>
+
         );
     };
 
@@ -185,10 +194,10 @@ function HorizontalCalendar({ selectedDate, setSelectedDate }: Props) {
                 style={{
                     backgroundColor: Colors[colorScheme].backgroundCalendar,
                 }}>
-                <Text className='px-3'>{getDateMonth(selectedDate)}</Text>
-                <Text className='px-1'>{getMonthNumber(selectedDate)}</Text>
-                <Text className='px-1'>/</Text>
-                <Text className='px-1'>{selectedDate.getFullYear()}</Text>
+                <Text className='px-3 text-xl uppercase'>{getDateMonth(selectedDay)}</Text>
+                <Text className='px-1 text-xl'>{getMonthNumber(selectedDay)}</Text>
+                <Text className='px-1 text-xl'>/</Text>
+                <Text className='px-1 text-xl'>{selectedDay.getFullYear()}</Text>
             </View>
 
         )
@@ -206,7 +215,7 @@ function HorizontalCalendar({ selectedDate, setSelectedDate }: Props) {
                 contentContainerStyle={[
                     {
                         marginHorizontal: 10,
-                        marginVertical: 5,
+                        marginTop: 5,
                     },
                 ]}
                 showsHorizontalScrollIndicator={false}
@@ -223,26 +232,26 @@ function HorizontalCalendar({ selectedDate, setSelectedDate }: Props) {
 
 const styles = StyleSheet.create({
     dateOutput: {
-        color: '#BDF0CC',
         fontSize: 18,
         fontWeight: '900',
     },
     dayStyle: {
-        color: '#BDF0CC',
         textTransform: 'lowercase',
     },
     activeText: {
-        color: '#033F40',
     },
     item: {
         width: ITEM_WIDTH,
         height: ITEM_HEIGHT,
-        borderRadius: 50,
+        borderRadius: 14,
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0,
         justifyContent: 'center',
         alignItems: 'center',
         marginRight: 8,
     },
     todayNumber: {
+        color: '#000',
         fontWeight: '500',
         fontSize: 20
     },
@@ -258,7 +267,7 @@ const styles = StyleSheet.create({
         color: 'orange'
     },
     freeDay: {
-        color: 'grey'
+        color: 'green'
     },
     festivity: {
         color: 'purple'

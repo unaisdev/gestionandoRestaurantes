@@ -13,7 +13,9 @@ import ReservasParaFecha from '../components/features/ReservasParaFecha';
 function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
   
   return (
-    <View className='flex-1 mb-10'>
+    <View
+      style={styles.container}
+      className='flex-1 mb-10'>
       <ReservasParaFecha />
       <FloatingActionButton />
 
@@ -23,7 +25,9 @@ function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
 }
 
 const styles = StyleSheet.create({
-  
+    container: {
+      flex: 1,
+    }
 });
 
 

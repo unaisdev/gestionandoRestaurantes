@@ -1,39 +1,28 @@
-import * as WebBrowser from 'expo-web-browser';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
 
-import Colors from '../constants/Colors';
-import { MonoText } from './StyledText';
-import { Text, View } from './Themed';
 
 export default function EditScreenInfo({ path }: { path: string }) {
   return (
     <View>
       <View style={styles.getStartedContainer}>
         <Text
-          style={styles.getStartedText}
-          lightColor="rgba(0,0,0,0.8)"
-          darkColor="rgba(255,255,255,0.8)">
+          style={styles.getStartedText}>
           Open up the code for this screen:
         </Text>
 
         <View
-          style={[styles.codeHighlightContainer, styles.homeScreenFilename]}
-          darkColor="rgba(255,255,255,0.05)"
-          lightColor="rgba(0,0,0,0.05)">
-          <MonoText>{path}</MonoText>
+          style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
         </View>
 
         <Text
-          style={styles.getStartedText}
-          lightColor="rgba(0,0,0,0.8)"
-          darkColor="rgba(255,255,255,0.8)">
+          style={styles.getStartedText}>
           Change any of the text, save the file, and your app will automatically update.
         </Text>
       </View>
 
       <View style={styles.helpContainer}>
         <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
-          <Text style={styles.helpLinkText} lightColor={Colors.light.tint}>
+          <Text style={styles.helpLinkText}>
             Tap here if your app doesn't automatically update after making changes
           </Text>
         </TouchableOpacity>
@@ -43,9 +32,7 @@ export default function EditScreenInfo({ path }: { path: string }) {
 }
 
 function handleHelpPress() {
-  WebBrowser.openBrowserAsync(
-    'https://docs.expo.io/get-started/create-a-new-app/#opening-the-app-on-your-phonetablet'
-  );
+
 }
 
 const styles = StyleSheet.create({

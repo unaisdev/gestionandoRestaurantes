@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import {
     Button,
     Keyboard,
@@ -18,12 +17,12 @@ import { Reserva, RootTabScreenProps } from "../../types";
 import useColorScheme from "../../hooks/useColorScheme";
 import Colors from "../../constants/Colors";
 import { useNavigation } from "@react-navigation/native";
-import { ReservasContext, useReservas } from "../context/ReservasContext";
+import { ReservasContext, useReservasContext } from "../context/ReservasContext";
 import { ReservaInputsErrorValue, ReservaInputsValue } from "../context/types";
 import DateTimePicker, {
-    DateTimePickerAndroid,
     DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
+
 import { useDateContext } from "../context/DateContext";
 import {
     dateToString,
@@ -34,6 +33,7 @@ import {
 import { object, string, number, date, InferType } from 'yup';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons";
+import Animated, { SlideInLeft } from "react-native-reanimated";
 
 type Props = {
     reserva: Reserva;
@@ -43,6 +43,16 @@ type Props = {
 interface DateProps {
     onReservaChange: (reserva: ReservaInputsValue) => void;
     reserva: ReservaInputsValue;
+}
+
+const initialErrorState = {
+    nombre: "",
+    telefono: "",
+    personas: "",
+    dia: "",
+    hora: "",
+    email: "",
+    mas_info: "",
 }
 
 
@@ -145,7 +155,7 @@ const AddReservaForm = ({ reserva, isEditing }: Props) => {
 
     const navigation = useNavigation();
     const colorScheme = useColorScheme();
-    const { guardarReserva, actualizarReserva } = useReservas();
+    const { guardarReserva, actualizarReserva } = useReservasContext();
 
     const initialResState = isEditing ? reserva : {
         nombre: "",
@@ -157,15 +167,7 @@ const AddReservaForm = ({ reserva, isEditing }: Props) => {
         mas_info: "",
     };
 
-    const initialErrorState = {
-        nombre: "",
-        telefono: "",
-        personas: "",
-        dia: "",
-        hora: "",
-        email: "",
-        mas_info: "",
-    }
+
     const [inputValues, setInputValues] =
         useState<ReservaInputsValue>(initialResState);
     const [errorValues, setErrorValues] =
@@ -272,6 +274,7 @@ const AddReservaForm = ({ reserva, isEditing }: Props) => {
 
     return (
 
+     
         <KeyboardAwareScrollView
             extraScrollHeight={40}
             enableAutomaticScroll={true}

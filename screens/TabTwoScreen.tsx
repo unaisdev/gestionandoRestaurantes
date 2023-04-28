@@ -1,9 +1,7 @@
-import { Button, Platform, StyleSheet } from 'react-native';
+import { Button, Platform, StyleSheet, Text, View } from 'react-native';
 
 import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View } from '../components/Themed';
 import React, { useState } from 'react';
-import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { ReservaInputsValue } from '../components/context/types';
 import { Reserva } from '../types';
 import { hourToString, dateToString, stringToDate, stringToHourDate } from '../utils/date';

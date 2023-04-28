@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import useCachedResources from './hooks/useCachedResources';
@@ -21,7 +20,6 @@ export default function App() {
           <DateProvider>
             <ReservasProvider>
               <Navigation colorScheme={colorScheme} />
-              <StatusBar />
             </ReservasProvider>
           </DateProvider>
         </RootSiblingParent>

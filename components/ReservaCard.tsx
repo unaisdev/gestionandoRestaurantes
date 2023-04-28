@@ -1,19 +1,31 @@
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
-import { Alert, GestureResponderEvent, Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, GestureResponderEvent, Pressable, StyleSheet, View, Text } from "react-native";
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import { Reserva } from "../types";
-import axios from 'axios';
-import React from 'react';
-import { useReservas } from './context/ReservasContext';
+import React, { useEffect } from 'react';
+import { useReservasContext } from './context/ReservasContext';
 import { useNavigation } from '@react-navigation/native';
+import Animated, { RollInLeft, SlideInDown, SlideInLeft, SlideInRight, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 
 const ReservaCard = ({ reserva }: { reserva: Reserva }) => {
     const colorScheme = useColorScheme();
-    const { reservas, eliminarReserva } = useReservas()
+    const { reservas, eliminarReserva } = useReservasContext()
     const navigation = useNavigation();
+
+    const opacity = useSharedValue<number>(0);
+
+    const animatedStyle = useAnimatedStyle(() => {
+        return {
+            opacity: withTiming(opacity.value, { duration: 500 }),
+        };
+    });
+
+    useEffect(() => {
+        opacity.value = 1;
+    }, [opacity]);
 
     const wannaDelete = () =>
         Alert.alert(`${reserva.nombre}`, `¿estás seguro de querer eliminar la reserva?`, [
@@ -33,34 +45,40 @@ const ReservaCard = ({ reserva }: { reserva: Reserva }) => {
         eliminarReserva(reserva)
     }
 
+
     return (
-        <Pressable
-            className="flex flex-row mx-2 my-2 px-6 items-center justify-between"
-            style={styles.card}
-            onPress={() => { 
-                const isEditing = true
-                navigation.navigate('AddReserva', { reserva, isEditing }) 
-            }}>
-
-            <View className="basis-2/5">
-                <Text style={styles.nombre} className="flex first-letter:uppercase text-center font-bold">{reserva.nombre}</Text>
-                <Text style={styles.personas} className="flex text-center">{reserva.personas} pers.</Text>
-            </View>
-
-            <View className="basis-2/5">
-                <Text style={styles.dia} className="flex text-center">{reserva.dia}</Text>
-                <Text style={styles.hora} className="flex text-center">{reserva.hora}</Text>
-            </View>
+        <>
+            <Animated.View
+                style={[animatedStyle]}
+                entering={SlideInLeft.duration(1000)}>
 
                 <Pressable
-                    className='p-1 mb-4 bg-red-500'
-                    onPress={wannaDelete}
-                    style={[styles.eliminarButton]}>
-                    <FontAwesome name="remove" size={12} color={Colors[colorScheme].text} />
+                    className="flex flex-row mx-2 my-2 px-6 items-center justify-between"
+                    style={styles.card}
+                    onPress={() => {
+                        const isEditing = true
+                        navigation.navigate('AddReserva', { reserva, isEditing })
+                    }}>
+
+                    <View className="basis-2/5">
+                        <Text style={styles.nombre} className="flex first-letter:uppercase text-center font-bold">{reserva.nombre}</Text>
+                        <Text style={styles.personas} className="flex text-center">{reserva.personas} pers.</Text>
+                    </View>
+
+                    <View className="basis-2/5">
+                        <Text style={styles.dia} className="flex text-center">{reserva.dia}</Text>
+                        <Text style={styles.hora} className="flex text-center">{reserva.hora}</Text>
+                    </View>
+
+                    <Pressable
+                        className='p-1 mb-4 bg-red-500'
+                        onPress={wannaDelete}
+                        style={[styles.eliminarButton]}>
+                        <FontAwesome name="remove" size={12} color={Colors[colorScheme].text} />
+                    </Pressable>
                 </Pressable>
-
-
-        </Pressable>
+            </Animated.View>
+        </>
     )
 }
 

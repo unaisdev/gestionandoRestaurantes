@@ -1,8 +1,6 @@
-import { StatusBar } from 'expo-status-bar';
 import { FlatList, Platform, StyleSheet, TextInput, } from 'react-native';
 
 import { Text, View } from '../Themed';
-import { useForm } from 'react-hook-form';
 import React, { useEffect, useState } from 'react';
 import HorizontalCalendar from '../HorizontalCalendar';
 import { Reserva } from '../../types';
@@ -17,9 +15,7 @@ const ReservasParaFecha = () => {
 
     return (
         <View className='flex-1'>
-            <HorizontalCalendar
-                selectedDate={selectedDate}
-                setSelectedDate={setSelectedDate} />
+            <HorizontalCalendar />
             <ReservaList />
         </View>
     )

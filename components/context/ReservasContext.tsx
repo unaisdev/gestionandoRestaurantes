@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useMemo, useState } from "react";
 import { Reserva } from "../../types";
-import { View } from "../Themed";
 import axios from "axios";
 import { ReservaInputsValue } from "./types";
 import { useDateContext } from "./DateContext";
@@ -156,16 +155,26 @@ export const ReservasProvider = ({ children }: { children: React.ReactNode }) =>
                     params: {
                         key: "holaquetalestamos",
                     },
-                }
-            );
-            console.log(response.data)
+                    timeout: 5000,  
+                },
+                
+            ).then((res) => {
+                setReservas(res.data)
+                setLoadingReservas(false)
+                toast = Toast.show(`Cargadas ${res.data.length} reservas.`, {
+                    duration: Toast.durations.SHORT,
+                    position: Toast.positions.CENTER
+                });
+            }).catch((error) => {
+                setLoadingReservas(false)
 
-            setReservas(response.data)
-            setLoadingReservas(false)
-            toast = Toast.show(`Cargadas ${response.data.length} reservas.`, {
-                duration: Toast.durations.SHORT,
-                position: Toast.positions.CENTER
+                toast = Toast.show(`Problema al cargar las reservas.`, {
+                    duration: Toast.durations.SHORT,
+                    position: Toast.positions.CENTER
+                });
             });
+            
+            
         } catch (error) {
             console.error(error);
         }
@@ -182,7 +191,7 @@ export const ReservasProvider = ({ children }: { children: React.ReactNode }) =>
 }
 
 
-export const useReservas = () => {
+export const useReservasContext = () => {
     const { reservas, loadingReservas, guardarReserva, poblarArray, eliminarReserva, actualizarReserva } = useContext(ReservasContext)
 
     return { reservas, loadingReservas, guardarReserva, poblarArray, eliminarReserva, actualizarReserva }
