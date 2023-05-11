@@ -26,7 +26,7 @@ export default {
     tabIconSelected: tintColorDark,
     borderColor: '#000',
     inputPlaceHolders: '#ccc',
-    dayNumber: '#ccc',
+    dayNumber: '#424242',
     dayNumberSelected: '#000',
     dayString: '#000',
   },

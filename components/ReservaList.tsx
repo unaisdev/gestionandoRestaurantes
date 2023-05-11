@@ -89,7 +89,7 @@ const ReservaList = () => {
           style={styles.card}
           entering={FadeIn.duration(2000)}>
 
-          <Text>NO HAY RESERVAS PARA ESTE DIA</Text>
+          <Text>NO HAY RESERVAS PARA EL DIA <Text style={{ color: 'red'}}>{selectedDayString}</Text></Text>
         </Animated.View>
 
       </ScrollView>}

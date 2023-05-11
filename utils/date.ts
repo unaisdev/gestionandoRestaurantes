@@ -32,7 +32,14 @@ export const hourToString = (date: Date) => {
 export const stringToHourDate = (hour: string) => {
   console.log("string to hour", hour);
   const [hours, minutes] = hour.split(":");
-  return new Date(0, 0, 0, parseInt(hours), parseInt(minutes));
+  const currentDate = new Date(); // Get the current date and time
+  return new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    currentDate.getDate(),
+    parseInt(hours),
+    parseInt(minutes)
+  );
 };
 
 export const getDateMonth = (selectedDate: Date) => {
@@ -81,6 +88,10 @@ export const translateWeekDay = (str: string) => {
   }
 };
 
-export function compareFestivityDay(date1: Date, date2: Date):boolean {
-  return date1.getDate() === date2.getDate() && date1.getMonth() === date2.getMonth() && date1.getFullYear() === date2.getFullYear() ?  true : false;
+export function compareFestivityDay(date1: Date, date2: Date): boolean {
+  return date1.getDate() === date2.getDate() &&
+    date1.getMonth() === date2.getMonth() &&
+    date1.getFullYear() === date2.getFullYear()
+    ? true
+    : false;
 }

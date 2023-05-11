@@ -105,6 +105,7 @@ const DateSelector = ({ reserva, onReservaChange }: DateProps) => {
 const TimeSelector = ({ reserva, onReservaChange }: DateProps) => {
     const [show, setShow] = useState(false);
 
+    console.log("hora de reserva" + reserva.hora)
     const onChange = (
         event: DateTimePickerEvent,
         selectedTime: Date | undefined
@@ -113,6 +114,9 @@ const TimeSelector = ({ reserva, onReservaChange }: DateProps) => {
         if (selectedTime === undefined) currentTime = stringToDate(reserva.hora);
         else currentTime = selectedTime;
         setShow(Platform.OS === "ios");
+        console.log("currentTime" + currentTime)
+        console.log("selectedTime" + selectedTime)
+
         onReservaChange({ ...reserva, hora: hourToString(currentTime) });
     };
 
@@ -152,7 +156,8 @@ const TimeSelector = ({ reserva, onReservaChange }: DateProps) => {
 const AddReservaForm = ({ reserva, isEditing }: Props) => {
     const [date, setDate] = useState(new Date());
     const { selectedDay } = useDateContext();
-
+    console.log(reserva);
+    
     const navigation = useNavigation();
     const colorScheme = useColorScheme();
     const { guardarReserva, actualizarReserva } = useReservasContext();

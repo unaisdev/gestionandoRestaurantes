@@ -24,7 +24,6 @@ const AddReservaScreen = () => {
         personas: 0,
     };
     const isEditing = params && 'isEditing' in params ? (params.isEditing as Boolean) : undefined;
-
     // const isEditing = params && 'isEditing' in params
     // const reserva: Reserva = route.params;
 

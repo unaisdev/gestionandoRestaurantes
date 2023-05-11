@@ -30,7 +30,7 @@ export default function TabTwoScreen() {
   return (
 
     <View>
-      <Text>{JSON.stringify(inputValues, null, 4)}</Text>
+      {/* <Text>{JSON.stringify(inputValues, null, 4)}</Text> */}
     </View>
     // <View>
     //   <Text>{JSON.stringify(inputValues, null, 4)}</Text>
